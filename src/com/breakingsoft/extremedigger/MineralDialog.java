@@ -12,13 +12,8 @@ import android.widget.TextView;
 
 public class MineralDialog extends PausingDialog{
 	
-
-	private Cargo mCargo;
 	private GameState mGS;
 	
-	public void setCargo(Cargo cargo){
-		mCargo = cargo;
-	}
 	
 	public void setGameState(GameState gs){
 		mGS = gs;
@@ -38,23 +33,23 @@ public class MineralDialog extends PausingDialog{
 	    
 	    final ListView list = (ListView)contents.findViewById(R.id.cargoList);
 	    
-	    final CargoAdapter adapter = new CargoAdapter(getActivity(), mCargo, true);
+	    final CargoAdapter adapter = new CargoAdapter(getActivity(), mGS.getCargo(), true);
 		list.setAdapter(adapter);
 		
 		final TextView total = (TextView)contents.findViewById(R.id.totalPrice);
-		total.setText(mCargo.getTotalPrice()+"$");
+		total.setText(mGS.getCargo().getTotalPrice()+"$");
 	    
 		
 		((Button)contents.findViewById(R.id.sellAll)).setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				mGS.addMoney(mCargo.getTotalPrice());
-				mCargo.clear();
+				mGS.addMoney(mGS.getCargo().getTotalPrice());
+				mGS.getCargo().clear();
 				
 				adapter.notifyDataSetChanged();
 				list.invalidateViews();
-				total.setText(mCargo.getTotalPrice()+"$");
+				total.setText(mGS.getCargo().getTotalPrice()+"$");
 			}
 			
 		});

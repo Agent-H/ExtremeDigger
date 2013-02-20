@@ -54,10 +54,12 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	
 	private Sprite mSprite;
 	
-	private Cargo mCargo = new Cargo();
+	private GameState mGS;
 
 	public Digger(Game game, Entity entity){
 		super(game, entity);
+		
+		mGS = (GameState)game().getGameState();
 	}
 	
 	public Digger init(Activity act, DiggerWorld world) {
@@ -96,7 +98,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	}
 	
 	/**
-	 * Réinitialise la foreuse
+	 * Rï¿½initialise la foreuse
 	 */
 	public Digger init(){
 		
@@ -106,10 +108,6 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 		mPhysic.setSpeed(0,0);
 		
 		return this;
-	}
-	
-	public Cargo getCargo(){
-		return mCargo;
 	}
 
 	@Override
@@ -214,12 +212,12 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 			int mineral = (mWorld.get(diggingX, diggingY) & MaterialBank.MATERIAL_MASK);
 			
 			if(mineral != 0 && mineral != MaterialBank.MATERIAL_TERRE){
-				if(mCargo.put(mineral)){
+				if(mGS.getCargo().put(mineral)){
 					((Toast)new Entity(game())
 					.requireOne("Toast"))
 					.setText("+1 "+MaterialBank.getMaterialName(mineral))
 					.show(diggingX*World.TILE_SIZE+20, (diggingY+0.5f)*World.TILE_SIZE+40);
-				} else { //Echec de l'ajout du mineral. Le cargo doit être plein
+				} else { //Echec de l'ajout du mineral. Le cargo doit ï¿½tre plein
 					((Toast)new Entity(game())
 					.requireOne("Toast"))
 					.setText("Cargo full !")

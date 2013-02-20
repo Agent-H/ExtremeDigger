@@ -49,4 +49,10 @@ public class Game2D extends Game{
 		registerComponent("Text", Text.class);
 		registerComponent("Toast", Toast.class);
 	}
+
+	@Override
+	public GameState getGameState() {
+		return null;
+	}
+
 }

@@ -1,20 +1,26 @@
 package com.breakingsoft.extremedigger;
 
 
-public class GameState {
+public class GameState extends com.breakingsoft.engine.core.GameState{
 
 	public static final int START_MONEY = 100;
 	
 	private int mMoney;
 	private FuelTank mFuel;
+	private Cargo mCargo;
 	
 	public boolean moneyChanged;
 	public boolean fuelChanged;
 	
 	public GameState(){
 		mFuel = new FuelTank();
+		mCargo = new Cargo();
 		
 		reset();
+	}
+	
+	public Cargo getCargo(){
+		return mCargo;
 	}
 	
 	public void addMoney(int money){

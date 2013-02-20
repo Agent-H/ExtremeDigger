@@ -16,6 +16,7 @@ import com.breakingsoft.engine.util.VectF;
 public class DiggerGame extends Game2D{
 
 	private TextView mPauseView;
+	private GameState mGS;
 	
 	public DiggerGame(final FragmentActivity act) {
 		super((SurfaceView) act.findViewById(R.id.fullscreen_content), 680);
@@ -28,6 +29,8 @@ public class DiggerGame extends Game2D{
 			}
 			
 		});
+		
+		mGS = new GameState();
 		
 		MaterialBank.init(act);
 		
@@ -53,7 +56,7 @@ public class DiggerGame extends Game2D{
 		//Dialog showing collected minerals
 		final CargoDialog cargoDialog = new CargoDialog();
 	
-		cargoDialog.setCargo(digger.getCargo());
+		cargoDialog.setCargo(mGS.getCargo());
 		cargoDialog.setGame(this);
 		
 		//Shows cargo dialog on click on cargo button
@@ -65,19 +68,18 @@ public class DiggerGame extends Game2D{
 		});
 		
 		
-		// --- Génération des batiments
+		// --- Gï¿½nï¿½ration des batiments
 		final MineralDialog mineralDialog = new MineralDialog();
 		mineralDialog.setGame(this);
-		mineralDialog.setCargo(digger.getCargo());
-		mineralDialog.setGameState(gameplay.getGameState());
+		mineralDialog.setGameState(mGS);
 		
 		final FuelDialog fuelDialog = new FuelDialog();
-		fuelDialog.setGameState(gameplay.getGameState());
+		fuelDialog.setGameState(mGS);
 		fuelDialog.setGame(this);
 		
 		UpgradesDialog upgradesDialog = new UpgradesDialog();
 		upgradesDialog.setGame(this);
-		upgradesDialog.setGameState(gameplay.getGameState());
+		upgradesDialog.setGameState(mGS);
 		
 		Building b_mineral = (Building)(new Entity(this)).requireOne("Building");
 		b_mineral.setDrawable(act.getResources().getDrawable(R.drawable.building_mineral));
@@ -103,6 +105,11 @@ public class DiggerGame extends Game2D{
 		super.registerComponents();
 		registerComponent("Digger", Digger.class);
 		registerComponent("Building", Building.class);
+	}
+	
+	@Override
+	public GameState getGameState(){
+		return mGS;
 	}
 	
 	@Override

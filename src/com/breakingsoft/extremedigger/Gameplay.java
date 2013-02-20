@@ -4,19 +4,19 @@ import com.breakingsoft.engine.core.Game;
 import com.breakingsoft.engine.core.GameModule;
 
 public class Gameplay extends GameModule{
-
-	private GameState gs;
 	
 	private MoneyView mMoneyView;
 	private FuelView mFuelView;
 	private DiggerWorld mWorld;
+	private GameState gs;
 	
 	
 	public Gameplay(Game game, DiggerWorld world) {
 		super(game, "Gameplay");
 		
 		mWorld = world;
-		gs = new GameState();
+		
+		gs = (GameState) game().getGameState();
 	}
 
 	@Override
@@ -49,13 +49,9 @@ public class Gameplay extends GameModule{
 		mMoneyView = view;
 		view.setGameState(gs);
 	}
-	
-	public GameState getGameState(){
-		return gs;
-	}
 
 	/**
-	 * Methode appellée quand le joueur perd pour une raison quelconque
+	 * Methode appellï¿½e quand le joueur perd pour une raison quelconque
 	 */
 	public void gameOver(){
 		((Digger)game().getEntity("digger").requireOne("Digger")).init();

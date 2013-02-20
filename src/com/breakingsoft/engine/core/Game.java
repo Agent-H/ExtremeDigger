@@ -37,7 +37,7 @@ import com.breakingsoft.engine.util.LinkedList;
  * custom components on game start and create stuff to make the gameplay.
  *
  */
-public class Game extends EventEmitter{
+public abstract class Game extends EventEmitter{
 	
 	/**
 	 * Duration of one step in milliseconds
@@ -145,6 +145,8 @@ public class Game extends EventEmitter{
 		mPaused = true;
 	}
 	
+	abstract public GameState getGameState();
+	
 	/**
 	 * Stops the game
 	 */
@@ -163,12 +165,12 @@ public class Game extends EventEmitter{
 			boolean keepWaiting = true;
 			while(keepWaiting) {
 				try {
-					// Arrête le thread
+					// Arrï¿½te le thread
 					mThread.join();
-					//Il faut jeter le thread car les threads sont à usage unique.
+					//Il faut jeter le thread car les threads sont ï¿½ usage unique.
 					mThread = null;
 					keepWaiting = false;
-					// Comme on veut s'assurer qu'il s'arrête, on fait une boucle infinie
+					// Comme on veut s'assurer qu'il s'arrï¿½te, on fait une boucle infinie
 				} catch (InterruptedException e) {
 					// Essaie encore 
 					keepWaiting = true;
