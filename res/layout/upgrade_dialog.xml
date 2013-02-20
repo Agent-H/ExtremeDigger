@@ -1,0 +1,90 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/upgradeDialogRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="200dp"
+    tools:context=".GameActivity" >
+
+    <TableLayout
+        android:id="@+id/upgradesList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true" 
+        android:layout_marginTop="10dp"
+        android:stretchColumns="*">
+        
+        <TableRow >
+
+            
+            <TextView 
+                android:layout_column="1"
+                android:text="Element"
+                android:layout_weight="2"/>
+            
+            <TextView
+                android:text="Prix"
+                android:layout_weight="2" />
+
+            <TextView 
+                android:text="Niveau" 
+                android:layout_weight="1"
+                />
+            
+        </TableRow>
+        
+        <TableRow 
+            android:id="@+id/upgradeBatteryRow">
+            
+            <ImageView 
+                android:src="@drawable/battery"/>
+            
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:text="Battery" />
+            
+            <TextView
+                android:id="@+id/batteryPrice"
+                android:layout_gravity="center_vertical"
+                android:text="1000 $" />
+            
+            <TextView
+                android:id="@+id/batteryLevel"
+                android:layout_gravity="center_vertical"
+                android:text="1" />
+            
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="10dp"
+        android:text="@string/upgradesDialogTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/moneyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/moneyCount"
+        android:layout_alignParentTop="true"
+        android:paddingRight="10dp"
+        android:text="@string/moneyLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/moneyCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:paddingRight="10dp"
+        android:text="100$"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Extreme Digger</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="cargoLoadLabel">Cargo load :</string>
+    <string name="sellAll">Vendre tout</string>
+    <string name="fillFuelButton">Faire le plein</string>
+    <string name="moneyCount">Solde :</string>
+    <string name="upgradesDialogTitle">Upgrades</string>
+    <string name="moneyLabel">Money :</string>
+    <string name="upgradeItemDialogTitle">Upgrade item</string>
+
+</resources>

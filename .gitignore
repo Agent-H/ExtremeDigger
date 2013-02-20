@@ -4,3 +4,10 @@
 *.jar
 *.war
 *.ear
+
+bin/
+gen/
+
+# eclipse stuff #
+.classpath
+.settings
