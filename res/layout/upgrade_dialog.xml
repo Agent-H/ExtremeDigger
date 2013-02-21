@@ -55,6 +55,27 @@
                 android:text="1" />
             
         </TableRow>
+        
+        <TableRow 
+            android:id="@+id/upgradeCargoRow">
+            
+            <ImageView />
+            
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:text="Cargo" />
+            
+            <TextView
+                android:id="@+id/cargoPrice"
+                android:layout_gravity="center_vertical"
+                android:text="1000 $" />
+            
+            <TextView
+                android:id="@+id/cargoLevel"
+                android:layout_gravity="center_vertical"
+                android:text="1" />
+            
+        </TableRow>
     </TableLayout>
 
     <TextView

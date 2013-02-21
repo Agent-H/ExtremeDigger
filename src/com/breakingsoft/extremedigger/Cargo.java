@@ -11,7 +11,7 @@ public class Cargo extends Upgradable{
 	private int[] mCargo;
 	
 	public Cargo(){
-		super(2, new int[]{1000, 2000, 5000});
+		super(2, new int[]{1000, 2000, 5000}, CAPACITY);
 		
 		mCargo = new int[MaterialBank.NB_MATERIALS];
 	}

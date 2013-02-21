@@ -8,6 +8,7 @@ import android.widget.TextView;
 public class MoneyView extends TextView{
 
 	private GameState mGS;
+	private int mMoneyCache;
 	
 	public MoneyView(Context context) {
 		super(context);
@@ -30,8 +31,12 @@ public class MoneyView extends TextView{
 	
 	@Override
 	public void onDraw(Canvas c){
-		if(mGS != null)
-			setText(mGS.getMoney()+"$");
+		if(mGS != null){
+			if(mMoneyCache != mGS.getMoney()){
+				setText(mGS.getMoney()+"$");
+				mMoneyCache = mGS.getMoney();
+			}
+		}
 		super.onDraw(c);
 	}
 

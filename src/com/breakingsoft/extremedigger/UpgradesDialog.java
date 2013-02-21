@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class UpgradesDialog extends PausingDialog{
 
@@ -17,6 +15,8 @@ public class UpgradesDialog extends PausingDialog{
 	private LayoutInflater mInflater;
 	private TextView mBatteryPrice;
 	private TextView mBatteryLevel;
+	private TextView mCargoPrice;
+	private TextView mCargoLevel;
 	
 	
 	@Override
@@ -29,19 +29,38 @@ public class UpgradesDialog extends PausingDialog{
 		 
 		 View contents = mInflater.inflate(R.layout.upgrade_dialog, null);
 		 
-		 TableRow batteryRow = (TableRow) contents.findViewById(R.id.upgradeBatteryRow);
+		 final UpgradeItemDialog batteryDialog = new UpgradeItemDialog();
+		 batteryDialog.setItem(mGS.getFuelTank(), mGS);
+		 batteryDialog.setLayout(R.layout.upgrade_battery_dialog);
 		 
+		 final UpgradeItemDialog cargoDialog = new UpgradeItemDialog();
+		 cargoDialog.setItem(mGS.getCargo(), mGS);
+		 cargoDialog.setLayout(R.layout.upgrade_cargo_dialog);
+		 
+		 TableRow batteryRow = (TableRow) contents.findViewById(R.id.upgradeBatteryRow);
 		 batteryRow.setOnClickListener(new OnClickListener(){
 
 			@Override
 			public void onClick(View v) {
-				showBatteryDialog();
+				batteryDialog.show(getFragmentManager(), "upgrade");
+			}
+			 
+		 });
+		 
+		 TableRow cargoRow = (TableRow) contents.findViewById(R.id.upgradeCargoRow);
+		 cargoRow.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				cargoDialog.show(getFragmentManager(), "upgrade");
 			}
 			 
 		 });
 		 
 		 mBatteryPrice = (TextView)contents.findViewById(R.id.batteryPrice);
 		 mBatteryLevel = (TextView)contents.findViewById(R.id.batteryLevel);
+		 mCargoPrice = (TextView)contents.findViewById(R.id.cargoPrice);
+		 mCargoLevel = (TextView)contents.findViewById(R.id.cargoLevel);
 		 
 		 refresh();
 		 
@@ -51,14 +70,27 @@ public class UpgradesDialog extends PausingDialog{
 		 return builder.create();
 	}
 	
+	@Override
+	public void onResume(){
+		super.onResume();
+		refresh();
+	}
+	
 	public void setGameState(GameState gs){
 		mGS = gs;
 	}
 	
-	private void showBatteryDialog(){
+	private void refresh(){
+		mBatteryLevel.setText(""+(mGS.getFuelTank().level()+1));
+		mBatteryPrice.setText(""+mGS.getFuelTank().getUpgradePrice()+"$");
+		mCargoLevel.setText(""+(mGS.getCargo().level()+1));
+		mCargoPrice.setText(""+mGS.getCargo().getUpgradePrice()+"$");
+	}
+	
+	/*private void showCargoDialog(){
 		AlertDialog.Builder myBuilder=  new AlertDialog.Builder(getActivity());
 		
-		View contents = mInflater.inflate(R.layout.upgrade_battery_dialog, null);
+		View contents = mInflater.inflate(R.layout.upgrade_cargo_dialog, null);
 		
 		final TextView levelView  = (TextView)contents.findViewById(R.id.levelView);
 		final TextView upgradePrice = (TextView)contents.findViewById(R.id.priceView);
@@ -104,10 +136,5 @@ public class UpgradesDialog extends PausingDialog{
 		myBuilder.setView(contents);
 		
 		myBuilder.create().show();
-	}
-	
-	private void refresh(){
-		mBatteryLevel.setText(""+(mGS.getFuelTank().level()+1));
-		mBatteryPrice.setText(""+mGS.getFuelTank().getUpgradePrice()+"$");
-	}
+	}*/
 }

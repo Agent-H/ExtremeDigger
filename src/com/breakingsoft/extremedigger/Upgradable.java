@@ -5,10 +5,12 @@ public class Upgradable {
 	private int mLevel;
 	private int mMaxLevel;
 	private int[] mPrices;
+	private int[] mValues;
 	
-	public Upgradable(int maxLevel, int[] prices){
+	public Upgradable(int maxLevel, int[] prices, int[] values){
 		mMaxLevel = maxLevel;
 		mPrices = prices;
+		mValues = values;
 	}
 	
 	public int level(){
@@ -40,6 +42,17 @@ public class Upgradable {
 	
 	public boolean upgradable(){
 		return mLevel < mMaxLevel;
+	}
+	
+	public int getValue(){
+		return mValues[mLevel];
+	}
+	
+	public int getUpgradeValue(){
+		if(mLevel < mMaxLevel)
+			return mValues[mLevel+1];
+		
+		return 0;
 	}
 	
 }

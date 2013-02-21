@@ -77,7 +77,7 @@ public class FuelView extends View {
 		int fuel = 1;
 		
 		if(mTank != null){
-			maxFuel = mTank.getCapacity();
+			maxFuel = mTank.getMaxFuel();
 			fuel = mTank.getFuel();
 		}
 		

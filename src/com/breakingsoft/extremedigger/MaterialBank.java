@@ -116,7 +116,7 @@ public class MaterialBank {
 	};
 	
 	private static final int[] MATERIAL_PRICES = {
-		0, 20, 40, 100, 500, 1000, 5000, 10000, 60000
+		0, 20, 50, 100, 500, 1000, 5000, 10000, 60000
 	};
 	
 	private static final int[] MATERIAL_DRAWABLE_RES = {

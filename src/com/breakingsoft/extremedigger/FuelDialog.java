@@ -86,7 +86,7 @@ public class FuelDialog extends PausingDialog {
 	private void fill(int val){
 		
 		FuelTank tank = mGS.getFuelTank();
-		int maxFuel = tank.getCapacity();
+		int maxFuel = tank.getMaxFuel();
 		int fuel = tank.getFuel();
 		
 		if(val == 0){
@@ -108,7 +108,7 @@ public class FuelDialog extends PausingDialog {
 	
 	private void updateViews(){
 		mMoneyCount.setText(mGS.getMoney()+"$");
-		mFuelCount.setText((mGS.getFuelTank().getFuel()/10)+"/"+(mGS.getFuelTank().getCapacity()/10)+"C");
+		mFuelCount.setText((mGS.getFuelTank().getFuel()/10)+"/"+(mGS.getFuelTank().getValue())+"C");
 		mFuelView.invalidate();
 	}
 }

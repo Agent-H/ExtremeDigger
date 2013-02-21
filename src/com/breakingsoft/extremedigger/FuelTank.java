@@ -2,17 +2,18 @@ package com.breakingsoft.extremedigger;
 
 public class FuelTank extends Upgradable{
 
-	public static final int FUEL_LEVELS[] = {1000, 2000, 5000, 10000, 20000};
+	private static final int FUEL_LEVELS[] = {100, 200, 400, 700, 1200};
+	private static final int FUEL_PRICES[] = {750, 1500, 5000, 10000};
 
-	private int mFuel = FUEL_LEVELS[0];
+	private int mFuel = FUEL_LEVELS[0]*10;
 	
 	public FuelTank(){
-		super(4, new int[]{750, 1500, 5000, 10000});
+		super(4, FUEL_PRICES, FUEL_LEVELS);
 	}
 	
 	public void refill(int val){
 		
-		mFuel = Math.min(mFuel + val, FUEL_LEVELS[level()]);
+		mFuel = Math.min(mFuel + val, FUEL_LEVELS[level()]*10);
 	}
 	
 	public void decreaseFuel(int val){
@@ -23,20 +24,14 @@ public class FuelTank extends Upgradable{
 		return mFuel;
 	}
 	
-	public int getCapacity(){
-		return FUEL_LEVELS[level()];
-	}
-	
-	public int getUpgradeCapacity(){
-		if(upgradable())
-			return FUEL_LEVELS[level()+1];
-		return 0;
+	public int getMaxFuel(){
+		return FUEL_LEVELS[level()]*10;
 	}
 	
 	public boolean upgrade(int level){
 		boolean ret = super.upgrade(level);
 		
-		mFuel = getCapacity();
+		mFuel = FUEL_LEVELS[level()]*10;
 		
 		return ret;
 	}

@@ -16,9 +16,9 @@ public class DiggerWorld extends World{
 	public DiggerWorld(Game game, Context ctx) {
 		super(game);
 		
-		//	---	Initialisation des paramètres	---	
+		//	---	Initialisation des paramï¿½tres	---	
 		
-		//Génération de la map de sprites
+		//Gï¿½nï¿½ration de la map de sprites
 		SparseArray<Drawable> drawables = MaterialBank.getDrawables();		
 		
 		
@@ -35,7 +35,7 @@ public class DiggerWorld extends World{
 	}
 	
 	/**
-	 * Génère une nouvelle map
+	 * Gï¿½nï¿½re une nouvelle map
 	 */
 	public void generate(){
 		for(int i = 0 ; i < MAP_WIDTH ; i++){
@@ -46,15 +46,15 @@ public class DiggerWorld extends World{
 
 					if(makeVide()){
 						super.set(i, j, MaterialBank.TYPE_VIDE);
+					} else if (makeLead(j)){
+						super.set(i, j, MaterialBank.TYPE_LEAD);
+					} else if (makeCopper(j)){
+						super.set(i, j, MaterialBank.TYPE_COPPER);
 					} else if (makeGold(j)){
 						super.set(i, j, MaterialBank.TYPE_GOLD);
 					} else if(makeAlu(j)){
 						super.set(i, j, MaterialBank.TYPE_ALU);
-					} else if (makeCopper(j)){
-						super.set(i, j, MaterialBank.TYPE_COPPER);
-					} else if (makeLead(j)){
-						super.set(i, j, MaterialBank.TYPE_LEAD);
-					} else {
+					}  else {
 						super.set(i, j, MaterialBank.TYPE_TERRE);
 					}
 				}
@@ -75,10 +75,10 @@ public class DiggerWorld extends World{
 	}
 	
 	private boolean makeGold(int x){
-		return Math.random() < x*0.5/202-0.12;
+		return Math.random() < (x*0.5/202-0.12)/((-1/(x-512)*100));
 	}
 	private boolean makeCopper(int x){
-		return Math.random() < Math.sqrt((float)x/512000);
+		return Math.random() < Math.sqrt((float)x/51200);
 	}
 	private boolean makeLead(int x){
 		return Math.random() < -0.05/256+0.15;
@@ -128,7 +128,7 @@ public class DiggerWorld extends World{
 	}
 	
 	public void computeVideType(int x, int y){
-		//Booleens à true si la case adjacente est vide
+		//Booleens ï¿½ true si la case adjacente est vide
 		boolean left = isVide(x-1, y);
 		boolean right = isVide(x+1, y);
 		boolean top = isVide(x, y-1);
