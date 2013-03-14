@@ -25,6 +25,8 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	public static final float DISTANCE_DIGGING_THRESHOLD = 1;
 	public static final int DIGGING_TIME = 1000;
 	public static final long DIGGING_START_TIME = 20000000;
+	public static final int DIGGING_FUEL_DIVIDER = 1500000;
+	public static final int NOT_DIGGING_FUEL_DIVIDER = 8000000;
 	
 	public static final int DIRECTION_LEFT = 0, 
 							DIRECTION_RIGHT = 1, 
@@ -33,7 +35,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 							DIRECTION_NONE = 4;
 	
 	//True if digger is currently digging (disables physic)
-	private boolean isDigging;
+	private boolean mIsDigging;
 	//True if current digging can be aborted
 	private boolean diggingAbortable;
 	//Measures time during which user is trying to digg before starting actual digging
@@ -113,7 +115,8 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	@Override
 	public void step(long time){
 		if(!game().isPaused()){
-			if(!isDigging){
+			if(!mIsDigging){
+				mGS.decreaseFuel((int) (time/NOT_DIGGING_FUEL_DIVIDER));
 				int px = (int)mPhysic.get2D().centerX()/World.TILE_SIZE;
 				int py = (int)mPhysic.get2D().centerY()/World.TILE_SIZE;
 				
@@ -129,6 +132,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 					break;
 				}
 			} else {
+				mGS.decreaseFuel((int) (time/DIGGING_FUEL_DIVIDER));
 				if(joystickDirection != direction && diggingAbortable){
 					abortDigging();
 				}
@@ -160,7 +164,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 		}
 		
 		mPhysic.setEnabled(true);
-		isDigging = false;
+		mIsDigging = false;
 		
 		mAnimation.stop();
 	}
@@ -190,7 +194,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 			diggingX = x;
 			diggingY = y;
 			
-			isDigging = true;
+			mIsDigging = true;
 			diggingAbortable = true;
 			diggingTimer = 0;
 			mPhysic.setEnabled(false);
@@ -207,7 +211,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 
 	@Override
 	public void onAnimationEnd() {
-		if(isDigging){
+		if(mIsDigging){
 			
 			int mineral = (mWorld.get(diggingX, diggingY) & MaterialBank.MATERIAL_MASK);
 			
@@ -228,7 +232,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 			//Remise en place de la foreuse
 			mWorld.set(diggingX, diggingY, MaterialBank.TYPE_VIDE);
 			mPhysic.setEnabled(true);
-			isDigging = false;
+			mIsDigging = false;
 		}
 	}
 
@@ -269,7 +273,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 			joystickDirection = DIRECTION_NONE;
 		}
 		
-		if(!isDigging){
+		if(!mIsDigging){
 			setDirection(joystickDirection);
 		}
 	}

@@ -15,7 +15,7 @@ public class FuelDialog extends PausingDialog {
 	/**
 	 * Amount of charge per dollar
 	 */
-	public static final int C_PER_DOLLAR = 50;
+	public static final int C_PER_DOLLAR = 5*FuelTank.FUEL_COEFF;
 	
 	private GameState mGS;
 	private TextView mMoneyCount;
@@ -108,7 +108,7 @@ public class FuelDialog extends PausingDialog {
 	
 	private void updateViews(){
 		mMoneyCount.setText(mGS.getMoney()+"$");
-		mFuelCount.setText((mGS.getFuelTank().getFuel()/10)+"/"+(mGS.getFuelTank().getValue())+"C");
+		mFuelCount.setText((mGS.getFuelTank().getFuel()/FuelTank.FUEL_COEFF)+"/"+(mGS.getFuelTank().getValue())+"C");
 		mFuelView.invalidate();
 	}
 }

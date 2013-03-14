@@ -23,8 +23,6 @@ public class Gameplay extends GameModule{
 	public void step(long time) {
 		
 		if(!game().isPaused()){
-			gs.decreaseFuel(time);
-			
 			if(gs.fuelEmpty()){
 				gameOver();
 			}

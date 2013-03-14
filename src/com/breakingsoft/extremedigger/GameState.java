@@ -41,8 +41,8 @@ public class GameState extends com.breakingsoft.engine.core.GameState{
 		return mFuel;
 	}
 	
-	public void decreaseFuel(long time){
-		mFuel.decreaseFuel((int) (time/100000));
+	public void decreaseFuel(int quty){
+		mFuel.decreaseFuel(quty);
 		fuelChanged = true;
 	}
 	

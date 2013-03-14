@@ -52,7 +52,8 @@ public class Animation extends Component{
 	 * @param duration
 	 */
 	public Animation move(int x, int y, int duration){
-		mEntry = mGame.addActiveComponent(this);
+		if(mEntry == null)
+			mEntry = mGame.addActiveComponent(this);
 		
 		if(beginVect == null)
 			beginVect = new VectF();
@@ -70,6 +71,9 @@ public class Animation extends Component{
 	}
 	
 	public Animation setColor(int color, int duration){
+		if(mEntry == null)
+			mEntry = mGame.addActiveComponent(this);
+		
 		if(mColor == null){
 			mColor = (ColorComponent) requireOne("Color");
 		}
@@ -120,8 +124,10 @@ public class Animation extends Component{
 			
 			if(currentDuration >= totalDuration && mListener != null){
 				mListener.onAnimationEnd();
-				mGame.removeActiveComponent(mEntry);
-				mEntry = null;
+				if(mEntry != null){
+					mGame.removeActiveComponent(mEntry);
+					mEntry = null;
+				}
 			}
 		}
 	}
