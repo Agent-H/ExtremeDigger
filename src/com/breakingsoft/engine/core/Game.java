@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.breakingsoft.engine.util.LinkedList;
@@ -58,6 +60,8 @@ public abstract class Game extends EventEmitter{
 	
 	private boolean mPaused = true;
 	
+	private FragmentActivity mAct;
+	
 	
 	/**
 	 * Default constructor. Calls registerComponents().<br />
@@ -65,7 +69,8 @@ public abstract class Game extends EventEmitter{
 	 * registerComponents() if you are shadowing this function since the default 
 	 * Game implementation may add components for it to work well.
 	 */
-	public Game(){
+	public Game(FragmentActivity act){
+		mAct = act;
 		registerComponents();
 	}
 	
@@ -190,6 +195,10 @@ public abstract class Game extends EventEmitter{
 	 */
 	protected void registerComponents(){
 		
+	}
+	
+	public FragmentActivity getActivity(){
+		return mAct;
 	}
 	
 	

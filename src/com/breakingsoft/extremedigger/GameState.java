@@ -52,7 +52,10 @@ public class GameState extends com.breakingsoft.engine.core.GameState{
 	
 	public void reset(){
 		mFuel.upgrade(0);
+		mCargo.upgrade(0);
+		
 		mMoney = START_MONEY;
+		mCargo.clear();
 	}
 	
 	public void fillTank(int val){

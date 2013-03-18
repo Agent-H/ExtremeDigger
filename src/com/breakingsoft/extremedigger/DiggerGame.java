@@ -19,7 +19,7 @@ public class DiggerGame extends Game2D{
 	private GameState mGS;
 	
 	public DiggerGame(final FragmentActivity act) {
-		super((SurfaceView) act.findViewById(R.id.fullscreen_content), 680);
+		super(act, (SurfaceView) act.findViewById(R.id.fullscreen_content), 680);
 		
 		act.findViewById(R.id.fullscreen_content).setOnClickListener(new OnClickListener(){
 
@@ -68,7 +68,7 @@ public class DiggerGame extends Game2D{
 		});
 		
 		
-		// --- G�n�ration des batiments
+		// --- Génération des batiments
 		final MineralDialog mineralDialog = new MineralDialog();
 		mineralDialog.setGame(this);
 		mineralDialog.setGameState(mGS);

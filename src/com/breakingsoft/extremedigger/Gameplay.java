@@ -1,5 +1,13 @@
 package com.breakingsoft.extremedigger;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
+
 import com.breakingsoft.engine.core.Game;
 import com.breakingsoft.engine.core.GameModule;
 
@@ -9,6 +17,8 @@ public class Gameplay extends GameModule{
 	private FuelView mFuelView;
 	private DiggerWorld mWorld;
 	private GameState gs;
+	private FragmentActivity act;
+	PausingDialog mGameOverDialog;
 	
 	
 	public Gameplay(Game game, DiggerWorld world) {
@@ -16,7 +26,34 @@ public class Gameplay extends GameModule{
 		
 		mWorld = world;
 		
+		act = game.getActivity();
 		gs = (GameState) game().getGameState();
+		
+		mGameOverDialog = new PausingDialog(){
+			@Override
+			public Dialog onCreateDialog(Bundle savedInstanceState) {
+				super.onCreateDialog(savedInstanceState);
+				
+		   	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		   	    
+		   	    View view = act.getLayoutInflater().inflate(R.layout.game_over_dialog, null);
+		   	 
+		   	    return builder.setView(view)
+				.setPositiveButton("Restart", new OnClickListener(){
+
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						((Digger)game().getEntity("digger").requireOne("Digger")).init();
+						
+						mWorld.generate();
+						gs.reset();
+					}
+					
+				}).create();
+		   	    
+			}
+		};
+		mGameOverDialog.setGame(game);
 	}
 
 	@Override
@@ -49,12 +86,13 @@ public class Gameplay extends GameModule{
 	}
 
 	/**
-	 * Methode appell�e quand le joueur perd pour une raison quelconque
+	 * Methode appellée quand le joueur perd pour une raison quelconque
 	 */
 	public void gameOver(){
-		((Digger)game().getEntity("digger").requireOne("Digger")).init();
+
 		
-		mWorld.generate();
-		gs.reset();
+				
+		mGameOverDialog.show(act.getSupportFragmentManager(), "Game over");
+		
 	}
 }

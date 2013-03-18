@@ -1,5 +1,6 @@
 package com.breakingsoft.engine.core;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.SurfaceView;
 
 import com.breakingsoft.engine.components.Animation;
@@ -27,7 +28,8 @@ public class Game2D extends Game{
 	 * Creates a 2D game with physics and graphics using the activity layout.
 	 * @param act
 	 */
-	public Game2D(SurfaceView view, int width){
+	public Game2D(FragmentActivity act, SurfaceView view, int width){
+		super(act);
 		addModule(new PhysicEngine(this));
 		addModule(new GraphicEngine(this, view, width));
 	}

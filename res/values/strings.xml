@@ -11,5 +11,6 @@
     <string name="upgradesDialogTitle">Upgrades</string>
     <string name="moneyLabel">Money :</string>
     <string name="upgradeItemDialogTitle">Upgrade item</string>
+    <string name="gameOver">Game over</string>
 
 </resources>
