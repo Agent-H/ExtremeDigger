@@ -99,6 +99,7 @@ public class Animation extends Component{
 	public Animation stop() {
 		if(mEntry != null){
 			mGame.removeActiveComponent(mEntry);
+			mEntry = null;
 			
 			if(mListener != null){
 				mListener.onAnimationEnd();
