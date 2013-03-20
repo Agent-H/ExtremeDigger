@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true" >
 
-        <com.breakingsoft.extremedigger.JoystickView
+        <com.agenth.extremedigger.JoystickView
             android:id="@+id/joystick"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="150dp"
@@ -30,7 +30,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true" />
 
-        <com.breakingsoft.extremedigger.MoneyView
+        <com.agenth.extremedigger.MoneyView
             android:id="@+id/moneyLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:text="0 $"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <com.breakingsoft.extremedigger.FuelView
+        <com.agenth.extremedigger.FuelView
             android:id="@+id/fuelView"
             android:layout_width="40dp"
             android:layout_height="80dp"

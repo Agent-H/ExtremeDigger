@@ -77,7 +77,7 @@
 	        android:layout_alignLeft="@+id/b10bocks"
 	        android:text="100$" />
 
-	    <com.breakingsoft.extremedigger.FuelView
+	    <com.agenth.extremedigger.FuelView
 	        android:id="@+id/fuelView"
 	        android:layout_width="50dp"
 	        android:layout_height="100dp"
