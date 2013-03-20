@@ -1,0 +1,66 @@
+package com.agenth.extremedigger;
+
+
+public class GameState extends com.agenth.engine.core.GameState{
+
+	public static final int START_MONEY = 100;
+	
+	private int mMoney;
+	private FuelTank mFuel;
+	private Cargo mCargo;
+	
+	public boolean moneyChanged;
+	public boolean fuelChanged;
+	
+	public GameState(){
+		mFuel = new FuelTank();
+		mCargo = new Cargo();
+		
+		reset();
+	}
+	
+	public Cargo getCargo(){
+		return mCargo;
+	}
+	
+	public void addMoney(int money){
+		mMoney += money;
+		moneyChanged = true;
+	}
+	
+	public void subMoney(int money){
+		mMoney -= money;
+		moneyChanged = true;
+	}
+	
+	public int getMoney(){
+		return mMoney;
+	}
+	
+	public FuelTank getFuelTank(){
+		return mFuel;
+	}
+	
+	public void decreaseFuel(int quty){
+		mFuel.decreaseFuel(quty);
+		fuelChanged = true;
+	}
+	
+	public boolean fuelEmpty(){
+		return mFuel.getFuel() <= 0;
+	}
+	
+	public void reset(){
+		mFuel.upgrade(0);
+		mCargo.upgrade(0);
+		
+		mMoney = START_MONEY;
+		mCargo.clear();
+	}
+	
+	public void fillTank(int val){
+		mFuel.refill(val);
+		fuelChanged = true;
+	}
+	
+}
