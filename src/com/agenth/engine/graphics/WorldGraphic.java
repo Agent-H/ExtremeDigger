@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.util.SparseArray;
 
 import com.agenth.engine.core.Component;
 import com.agenth.engine.core.Entity;
@@ -12,6 +11,7 @@ import com.agenth.engine.core.Event;
 import com.agenth.engine.core.EventListener;
 import com.agenth.engine.core.Game;
 import com.agenth.engine.core.World;
+import com.agenth.extremedigger.MaterialBank;
 
 public class WorldGraphic extends Component implements EventListener{
 	
@@ -31,8 +31,6 @@ public class WorldGraphic extends Component implements EventListener{
 	private boolean hasVerticalGradient;
 	
 	World mWorld;
-	
-	SparseArray<Drawable> mDrawables;
 
 	public WorldGraphic(Game game, Entity entity) {
 		super(game, entity);
@@ -80,10 +78,6 @@ public class WorldGraphic extends Component implements EventListener{
 			c.drawColor(mBgColor);
 		}
 		
-		//Dessins non initialis�s
-		if(mDrawables == null)
-			return;
-		
 		int oX = area.left% World.TILE_SIZE;
 		int oY = area.top% World.TILE_SIZE;
 		
@@ -94,7 +88,7 @@ public class WorldGraphic extends Component implements EventListener{
 		
 		for(int i = Math.max(beginX, 0) ; i < endX ; i++){
 			for(int j = Math.max(beginY, 0) ; j < endY ; j++){
-				Drawable sprite = mDrawables.get(mWorld.get(i, j));
+				Drawable sprite = MaterialBank.getDrawable(mWorld.get(i, j));
 				if(sprite != null){
 					synchronized(sprite){
 						sprite.setBounds(mGraphics.mapDimention((i-beginX)* World.TILE_SIZE-oX), 
@@ -115,10 +109,6 @@ public class WorldGraphic extends Component implements EventListener{
 		} else if(evt.type.equals("removed")){
 			mGraphics.setWorld(null);
 		}
-	}
-	
-	public void setDrawables(SparseArray<Drawable> drawables){
-		mDrawables = drawables;
 	}
 	
 	public void adjustViewport(Rect viewport){

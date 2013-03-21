@@ -1,6 +1,6 @@
 package com.agenth.extremedigger;
 
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
 import android.app.Activity;
 import android.util.SparseIntArray;

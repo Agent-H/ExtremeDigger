@@ -2,8 +2,6 @@ package com.agenth.extremedigger;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.util.SparseArray;
 
 import com.agenth.engine.core.Game;
 import com.agenth.engine.core.World;
@@ -16,14 +14,9 @@ public class DiggerWorld extends World{
 	public DiggerWorld(Game game, Context ctx) {
 		super(game);
 		
-		//	---	Initialisation des param�tres	---	
-		
-		//G�n�ration de la map de sprites
-		SparseArray<Drawable> drawables = MaterialBank.getDrawables();		
-		
-		
+		//	---	Initialisation des paramètres	---	
+
 		WorldGraphic graphic = (WorldGraphic) requireOne("WorldGraphic");
-		graphic.setDrawables(drawables);
 		graphic.setTopBound(-10000);
 		graphic.setBackgroundVerticalGradient(0xff330099, Color.BLACK);
 		
@@ -35,27 +28,27 @@ public class DiggerWorld extends World{
 	}
 	
 	/**
-	 * G�n�re une nouvelle map
+	 * Génère une nouvelle map
 	 */
 	public void generate(){
 		for(int i = 0 ; i < MAP_WIDTH ; i++){
 			for(int j = 1 ; j < MAP_HEIGHT ; j++){
 				if(j == 1)
-					super.set(i, j, MaterialBank.TYPE_TERRE);
+					super.set(i, j, MaterialBank.makeBloc(MaterialBank.TYPE_TERRE, j*100/MAP_HEIGHT+1));
 				else{
 
 					if(makeVide()){
-						super.set(i, j, MaterialBank.TYPE_VIDE);
+						super.set(i, j, MaterialBank.makeBloc(MaterialBank.TYPE_VIDE, 0));
 					} else if (makeLead(j)){
-						super.set(i, j, MaterialBank.TYPE_LEAD);
+						super.set(i, j, MaterialBank.makeBloc(MaterialBank.TYPE_LEAD, j*100/MAP_HEIGHT+1));
 					} else if (makeCopper(j)){
-						super.set(i, j, MaterialBank.TYPE_COPPER);
+						super.set(i, j, MaterialBank.makeBloc(MaterialBank.TYPE_COPPER, j*100/MAP_HEIGHT+1));
 					} else if (makeGold(j)){
-						super.set(i, j, MaterialBank.TYPE_GOLD);
+						super.set(i, j, MaterialBank.makeBloc(MaterialBank.TYPE_GOLD, j*100/MAP_HEIGHT+1));
 					} else if(makeAlu(j)){
-						super.set(i, j, MaterialBank.TYPE_ALU);
+						super.set(i, j, MaterialBank.makeBloc(MaterialBank.TYPE_ALU, j*100/MAP_HEIGHT+1));
 					}  else {
-						super.set(i, j, MaterialBank.TYPE_TERRE);
+						super.set(i, j, MaterialBank.makeBloc(MaterialBank.TYPE_TERRE, j*100/MAP_HEIGHT+1));
 					}
 				}
 			}

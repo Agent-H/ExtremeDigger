@@ -10,16 +10,25 @@ import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 
 import com.agenth.engine.physics.WorldPhysic;
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
+/**
+ * Donne des informations sur les matériaux.
+ * Format d'un bloc codé sur un int :
+ * 
+ * [ COLLISION (1), BREAKABLE (1), LIBRE (6), DENSITY (8), MATERIAL (8), MODIFIER (8) ]
+ */
 public class MaterialBank {
 	public static final int BREAKABLE_MASK = 0x20000000;
 	
+	public static final int DENSITY_MASK = 0x00ff0000;
 	public static final int MATERIAL_MASK = 0x0000ff00;
+	public static final int DRAWABLE_MASK = 0x0000ffff;
 	
 	public static final int MODIFIERS_MASK = 0x000000ff;
 	
-	public static final int MATERIAL_TERRE = 0x00000100,
+	public static final int MATERIAL_VIDE = 0x00000000,
+							MATERIAL_TERRE = 0x00000100,
 							MATERIAL_LEAD = 0x00000200,
 							MATERIAL_COPPER = 0x00000300,
 							MATERIAL_ALU = 0x00000400,
@@ -149,71 +158,71 @@ public class MaterialBank {
 		
 		Resources res = ctx.getResources();
 		
-		mDrawables.append(TYPE_TERRE, res.getDrawable(R.drawable.terre));
-		mDrawables.append(TYPE_VIDE, res.getDrawable(R.drawable.trou));
-		mDrawables.append(TYPE_VIDE1RIGHT, res.getDrawable(R.drawable.trou1));
-		mDrawables.append(TYPE_VIDE1BOTTOM, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou1))));
-		mDrawables.append(TYPE_VIDE1LEFT, new BitmapDrawable(res, rotateBitmap(180,BitmapFactory.decodeResource(res, R.drawable.trou1))));
-		mDrawables.append(TYPE_VIDE1TOP, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.trou1))));
-		mDrawables.append(TYPE_VIDE2HORIZONTAL, res.getDrawable(R.drawable.trou2o));
-		mDrawables.append(TYPE_VIDE2VERTICAL, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou2o))));
-		mDrawables.append(TYPE_VIDE2TOPRIGHT, res.getDrawable(R.drawable.trou2c));
-		mDrawables.append(TYPE_VIDE2BOTTOMRIGHT, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou2c))));
-		mDrawables.append(TYPE_VIDE2BOTTOMLEFT, new BitmapDrawable(res, rotateBitmap(180,BitmapFactory.decodeResource(res, R.drawable.trou2c))));
-		mDrawables.append(TYPE_VIDE2TOPLEFT, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.trou2c))));
-		mDrawables.append(TYPE_VIDE3BOTTOM, res.getDrawable(R.drawable.trou3));
-		mDrawables.append(TYPE_VIDE3LEFT, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou3))));
-		mDrawables.append(TYPE_VIDE3TOP, new BitmapDrawable(res, rotateBitmap(180,BitmapFactory.decodeResource(res, R.drawable.trou3))));
-		mDrawables.append(TYPE_VIDE3RIGHT, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.trou3))));
-		mDrawables.append(TYPE_TERRE1B, res.getDrawable(R.drawable.terre1));
-		mDrawables.append(TYPE_TERRE1L, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.terre1))));
-		mDrawables.append(TYPE_TERRE1R, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.terre1))));
-		mDrawables.append(TYPE_TERRE2B, res.getDrawable(R.drawable.terre2));
-		mDrawables.append(TYPE_TERRE2L, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.terre2))));
-		mDrawables.append(TYPE_TERRE2R, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.terre2))));
-		mDrawables.append(TYPE_TERRE3B, res.getDrawable(R.drawable.terre3));
-		mDrawables.append(TYPE_TERRE3L, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.terre3))));
-		mDrawables.append(TYPE_TERRE3R, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.terre3))));
-		mDrawables.append(TYPE_COPPER, res.getDrawable(R.drawable.copper));
-		mDrawables.append(TYPE_COPPER1B, res.getDrawable(R.drawable.copper1b));
-		mDrawables.append(TYPE_COPPER2B, res.getDrawable(R.drawable.copper2b));
-		mDrawables.append(TYPE_COPPER3B, res.getDrawable(R.drawable.copper3b));
-		mDrawables.append(TYPE_COPPER1R, res.getDrawable(R.drawable.copper1r));
-		mDrawables.append(TYPE_COPPER2R, res.getDrawable(R.drawable.copper2r));
-		mDrawables.append(TYPE_COPPER3R, res.getDrawable(R.drawable.copper3r));
-		mDrawables.append(TYPE_COPPER1L, res.getDrawable(R.drawable.copper1l));
-		mDrawables.append(TYPE_COPPER2L, res.getDrawable(R.drawable.copper2l));
-		mDrawables.append(TYPE_COPPER3L, res.getDrawable(R.drawable.copper3l));
-		mDrawables.append(TYPE_ALU, res.getDrawable(R.drawable.alu));
-		mDrawables.append(TYPE_ALU1B, res.getDrawable(R.drawable.alu1b));
-		mDrawables.append(TYPE_ALU2B, res.getDrawable(R.drawable.alu2b));
-		mDrawables.append(TYPE_ALU3B, res.getDrawable(R.drawable.alu3b));
-		mDrawables.append(TYPE_ALU1R, res.getDrawable(R.drawable.alu1r));
-		mDrawables.append(TYPE_ALU2R, res.getDrawable(R.drawable.alu2r));
-		mDrawables.append(TYPE_ALU3R, res.getDrawable(R.drawable.alu3r));
-		mDrawables.append(TYPE_ALU1L, res.getDrawable(R.drawable.alu1l));
-		mDrawables.append(TYPE_ALU2L, res.getDrawable(R.drawable.alu2l));
-		mDrawables.append(TYPE_ALU3L, res.getDrawable(R.drawable.alu3l));
-		mDrawables.append(TYPE_LEAD, res.getDrawable(R.drawable.lead));
-		mDrawables.append(TYPE_LEAD1B, res.getDrawable(R.drawable.lead1b));
-		mDrawables.append(TYPE_LEAD2B, res.getDrawable(R.drawable.lead2b));
-		mDrawables.append(TYPE_LEAD3B, res.getDrawable(R.drawable.lead3b));
-		mDrawables.append(TYPE_LEAD1R, res.getDrawable(R.drawable.lead1r));
-		mDrawables.append(TYPE_LEAD2R, res.getDrawable(R.drawable.lead2r));
-		mDrawables.append(TYPE_LEAD3R, res.getDrawable(R.drawable.lead3r));
-		mDrawables.append(TYPE_LEAD1L, res.getDrawable(R.drawable.lead1l));
-		mDrawables.append(TYPE_LEAD2L, res.getDrawable(R.drawable.lead2l));
-		mDrawables.append(TYPE_LEAD3L, res.getDrawable(R.drawable.lead3l));
-		mDrawables.append(TYPE_GOLD, res.getDrawable(R.drawable.gold));
-		mDrawables.append(TYPE_GOLD1B, res.getDrawable(R.drawable.gold1b));
-		mDrawables.append(TYPE_GOLD2B, res.getDrawable(R.drawable.gold2b));
-		mDrawables.append(TYPE_GOLD3B, res.getDrawable(R.drawable.gold3b));
-		mDrawables.append(TYPE_GOLD1R, res.getDrawable(R.drawable.gold1r));
-		mDrawables.append(TYPE_GOLD2R, res.getDrawable(R.drawable.gold2r));
-		mDrawables.append(TYPE_GOLD3R, res.getDrawable(R.drawable.gold3r));
-		mDrawables.append(TYPE_GOLD1L, res.getDrawable(R.drawable.gold1l));
-		mDrawables.append(TYPE_GOLD2L, res.getDrawable(R.drawable.gold2l));
-		mDrawables.append(TYPE_GOLD3L, res.getDrawable(R.drawable.gold3l));
+		mDrawables.append(TYPE_TERRE & DRAWABLE_MASK, res.getDrawable(R.drawable.terre));
+		mDrawables.append(TYPE_VIDE & DRAWABLE_MASK, res.getDrawable(R.drawable.trou));
+		mDrawables.append(TYPE_VIDE1RIGHT & DRAWABLE_MASK, res.getDrawable(R.drawable.trou1));
+		mDrawables.append(TYPE_VIDE1BOTTOM  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou1))));
+		mDrawables.append(TYPE_VIDE1LEFT  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(180,BitmapFactory.decodeResource(res, R.drawable.trou1))));
+		mDrawables.append(TYPE_VIDE1TOP  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.trou1))));
+		mDrawables.append(TYPE_VIDE2HORIZONTAL  & DRAWABLE_MASK, res.getDrawable(R.drawable.trou2o));
+		mDrawables.append(TYPE_VIDE2VERTICAL  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou2o))));
+		mDrawables.append(TYPE_VIDE2TOPRIGHT  & DRAWABLE_MASK, res.getDrawable(R.drawable.trou2c));
+		mDrawables.append(TYPE_VIDE2BOTTOMRIGHT  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou2c))));
+		mDrawables.append(TYPE_VIDE2BOTTOMLEFT  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(180,BitmapFactory.decodeResource(res, R.drawable.trou2c))));
+		mDrawables.append(TYPE_VIDE2TOPLEFT  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.trou2c))));
+		mDrawables.append(TYPE_VIDE3BOTTOM  & DRAWABLE_MASK, res.getDrawable(R.drawable.trou3));
+		mDrawables.append(TYPE_VIDE3LEFT  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.trou3))));
+		mDrawables.append(TYPE_VIDE3TOP  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(180,BitmapFactory.decodeResource(res, R.drawable.trou3))));
+		mDrawables.append(TYPE_VIDE3RIGHT  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.trou3))));
+		mDrawables.append(TYPE_TERRE1B  & DRAWABLE_MASK, res.getDrawable(R.drawable.terre1));
+		mDrawables.append(TYPE_TERRE1L  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.terre1))));
+		mDrawables.append(TYPE_TERRE1R  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.terre1))));
+		mDrawables.append(TYPE_TERRE2B  & DRAWABLE_MASK, res.getDrawable(R.drawable.terre2));
+		mDrawables.append(TYPE_TERRE2L  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.terre2))));
+		mDrawables.append(TYPE_TERRE2R  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.terre2))));
+		mDrawables.append(TYPE_TERRE3B  & DRAWABLE_MASK, res.getDrawable(R.drawable.terre3));
+		mDrawables.append(TYPE_TERRE3L  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(90,BitmapFactory.decodeResource(res, R.drawable.terre3))));
+		mDrawables.append(TYPE_TERRE3R  & DRAWABLE_MASK, new BitmapDrawable(res, rotateBitmap(270,BitmapFactory.decodeResource(res, R.drawable.terre3))));
+		mDrawables.append(TYPE_COPPER  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper));
+		mDrawables.append(TYPE_COPPER1B  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper1b));
+		mDrawables.append(TYPE_COPPER2B  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper2b));
+		mDrawables.append(TYPE_COPPER3B  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper3b));
+		mDrawables.append(TYPE_COPPER1R  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper1r));
+		mDrawables.append(TYPE_COPPER2R  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper2r));
+		mDrawables.append(TYPE_COPPER3R  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper3r));
+		mDrawables.append(TYPE_COPPER1L  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper1l));
+		mDrawables.append(TYPE_COPPER2L  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper2l));
+		mDrawables.append(TYPE_COPPER3L  & DRAWABLE_MASK, res.getDrawable(R.drawable.copper3l));
+		mDrawables.append(TYPE_ALU  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu));
+		mDrawables.append(TYPE_ALU1B  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu1b));
+		mDrawables.append(TYPE_ALU2B  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu2b));
+		mDrawables.append(TYPE_ALU3B  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu3b));
+		mDrawables.append(TYPE_ALU1R  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu1r));
+		mDrawables.append(TYPE_ALU2R  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu2r));
+		mDrawables.append(TYPE_ALU3R  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu3r));
+		mDrawables.append(TYPE_ALU1L  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu1l));
+		mDrawables.append(TYPE_ALU2L  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu2l));
+		mDrawables.append(TYPE_ALU3L  & DRAWABLE_MASK, res.getDrawable(R.drawable.alu3l));
+		mDrawables.append(TYPE_LEAD  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead));
+		mDrawables.append(TYPE_LEAD1B  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead1b));
+		mDrawables.append(TYPE_LEAD2B  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead2b));
+		mDrawables.append(TYPE_LEAD3B  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead3b));
+		mDrawables.append(TYPE_LEAD1R  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead1r));
+		mDrawables.append(TYPE_LEAD2R  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead2r));
+		mDrawables.append(TYPE_LEAD3R  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead3r));
+		mDrawables.append(TYPE_LEAD1L  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead1l));
+		mDrawables.append(TYPE_LEAD2L  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead2l));
+		mDrawables.append(TYPE_LEAD3L  & DRAWABLE_MASK, res.getDrawable(R.drawable.lead3l));
+		mDrawables.append(TYPE_GOLD  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold));
+		mDrawables.append(TYPE_GOLD1B  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold1b));
+		mDrawables.append(TYPE_GOLD2B  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold2b));
+		mDrawables.append(TYPE_GOLD3B  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold3b));
+		mDrawables.append(TYPE_GOLD1R  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold1r));
+		mDrawables.append(TYPE_GOLD2R  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold2r));
+		mDrawables.append(TYPE_GOLD3R  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold3r));
+		mDrawables.append(TYPE_GOLD1L  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold1l));
+		mDrawables.append(TYPE_GOLD2L  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold2l));
+		mDrawables.append(TYPE_GOLD3L  & DRAWABLE_MASK, res.getDrawable(R.drawable.gold3l));
 		
 		mDrawables.append(MATERIAL_TERRE, res.getDrawable(R.drawable.terre));
 		mDrawables.append(MATERIAL_LEAD, res.getDrawable(R.drawable.lead));
@@ -224,10 +233,6 @@ public class MaterialBank {
 		mDrawables.append(MATERIAL_SAPHIR, res.getDrawable(R.drawable.saphir));
 		mDrawables.append(MATERIAL_URANIUM, res.getDrawable(R.drawable.uranium));
 		mDrawables.append(MATERIAL_AMETHYST, res.getDrawable(R.drawable.amethyst));
-	}
-	
-	public static SparseArray<Drawable> getDrawables(){
-		return mDrawables;
 	}
 	
 	/**
@@ -280,6 +285,10 @@ public class MaterialBank {
 		return R.drawable.terre;
 	}
 	
+	public static Drawable getDrawable(int bloc){
+		return mDrawables.get(bloc & DRAWABLE_MASK);
+	}
+	
 	/**
 	 * Returns price of the material
 	 * @param material
@@ -291,6 +300,14 @@ public class MaterialBank {
 			return MATERIAL_PRICES[id];
 		
 		return 0;
+	}
+	
+	public static int getDensity(int bloc){
+		return (bloc & DENSITY_MASK) >> 16;
+	}
+	
+	public static int makeBloc(int material, int density){
+		return material | (density << 16);
 	}
 	
 	private static Bitmap rotateBitmap(int angle, Bitmap source){

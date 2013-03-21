@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 
 import com.agenth.extremedigger.util.SystemUiHider;
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
 public class GameActivity extends FragmentActivity  {
 

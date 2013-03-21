@@ -116,7 +116,7 @@ public class Animation extends Component{
 		if(!mGame.isPaused()){
 			
 			currentDuration += time;
-			mListener.onAnimationStep((int)(currentDuration/1000000));
+			mListener.onAnimationStep((int)(currentDuration/1000000), (int)(totalDuration/1000000));
 			
 			if(moveEn)
 				animateMove();
@@ -154,6 +154,6 @@ public class Animation extends Component{
 	
 	public interface AnimationListener{
 		void onAnimationEnd();
-		void onAnimationStep(int time);
+		void onAnimationStep(int time, int total);
 	}
 }

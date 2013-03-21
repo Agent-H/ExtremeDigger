@@ -17,7 +17,7 @@ import com.agenth.engine.graphics.ViewTarget;
 import com.agenth.engine.physics.Physic;
 import com.agenth.engine.physics.WorldPhysic;
 import com.agenth.engine.util.VectF;
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
 public class Digger extends Component implements AnimationListener, JoystickMovedListener{
 	
@@ -101,7 +101,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	}
 	
 	/**
-	 * R�initialise la foreuse
+	 * Réinitialise la foreuse
 	 */
 	public Digger init(){
 		
@@ -199,7 +199,10 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 			diggingAbortable = true;
 			diggingTimer = 0;
 			mPhysic.setEnabled(false);
-			mAnimation.move(x*World.TILE_SIZE, y*World.TILE_SIZE, DIGGING_TIME);
+			
+			//TODO
+			int density = MaterialBank.getDensity(mWorld.get(diggingX, diggingY));
+			mAnimation.move(x*World.TILE_SIZE, y*World.TILE_SIZE, DIGGING_TIME*(density*7/100+1));
 		}
 	}
 	
@@ -238,12 +241,12 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	}
 
 	@Override
-	public void onAnimationStep(int time) {
-		if(time > 3*DIGGING_TIME/4){
+	public void onAnimationStep(int time, int total) {
+		if(time > 3*total/4){
 			mWorld.setDirect(diggingX, diggingY, (mWorld.get(diggingX, diggingY) & MaterialBank.MATERIAL_MASK)+ 0x10*direction+3);
-		} else if(time > DIGGING_TIME/2) {
+		} else if(time > total/2) {
 			mWorld.setDirect(diggingX, diggingY, (mWorld.get(diggingX, diggingY) & MaterialBank.MATERIAL_MASK) + 0x10*direction+2);
-		} else if(time > DIGGING_TIME/4){
+		} else if(time > total/4){
 			diggingAbortable = false;
 			mWorld.setDirect(diggingX, diggingY, (mWorld.get(diggingX, diggingY) & MaterialBank.MATERIAL_MASK) + 0x10*direction + 1);
 			mWorld.computeVideType(

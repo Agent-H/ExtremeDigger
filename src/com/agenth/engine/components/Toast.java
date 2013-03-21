@@ -71,9 +71,6 @@ public class Toast extends Text implements AnimationListener{
 
 
 	@Override
-	public void onAnimationStep(int time) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onAnimationStep(int time, int total) {	}
 
 }

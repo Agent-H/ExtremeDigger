@@ -12,7 +12,7 @@ import com.agenth.engine.core.Game2D;
 import com.agenth.engine.core.World;
 import com.agenth.engine.physics.PhysicEngine;
 import com.agenth.engine.util.VectF;
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
 public class DiggerGame extends Game2D{
 
