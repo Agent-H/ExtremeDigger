@@ -25,8 +25,8 @@ public class Animation extends Component{
 	private int beginColor;
 	private int endColor;
 	
-	private long totalDuration;
-	private long currentDuration;
+	private int totalDuration;
+	private int currentDuration;
 	
 	private boolean moveEn = false, colorEn = false;
 	
@@ -88,8 +88,8 @@ public class Animation extends Component{
 		return this;
 	}
 	
-	private void startAnimation(long duration){
-		totalDuration = duration*1000000;
+	private void startAnimation(int duration){
+		totalDuration = duration;
 		currentDuration = 0;
 	}
 	/**
@@ -112,11 +112,11 @@ public class Animation extends Component{
 	}
 	
 	@Override
-	public void step(long time){
+	public void step(int time){
 		if(!mGame.isPaused()){
 			
 			currentDuration += time;
-			mListener.onAnimationStep((int)(currentDuration/1000000));
+			mListener.onAnimationStep(currentDuration);
 			
 			if(moveEn)
 				animateMove();

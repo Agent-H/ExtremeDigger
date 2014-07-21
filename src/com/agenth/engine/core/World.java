@@ -1,26 +1,44 @@
 package com.agenth.engine.core;
 
+import android.os.Bundle;
+import android.util.Log;
 
-public class World extends Entity{
+
+public abstract class World extends Entity{
 	
-	public int mWidth;
-	public int mHeight;	
+	private int mWidth;
+	private int mHeight;	
 	
-	public static final int MAP_WIDTH = 48;
-	public static final int MAP_HEIGHT = 256;
+	public static final int MAP_WIDTH = 30;
+	public static final int MAP_HEIGHT = 300;
 	
 	public static final int TILE_SIZE = 120;
 	
 	private int[][] map = new int[MAP_WIDTH][MAP_HEIGHT];
 	
-	public World(Game game){
+	public World(Game game, Bundle savedInstanceState){
 		super(game);
 		
 		mWidth = TILE_SIZE * MAP_WIDTH;
 		mHeight = TILE_SIZE * MAP_HEIGHT;
 		
 		require("WorldPhysic WorldGraphic");
+		
+		
+		if (savedInstanceState != null) {
+			Log.v("com.agenth.extremedigger", "restore map");
+			for (int i = 0 ; i < MAP_WIDTH ; ++i) {
+				for (int j = 0 ; j < MAP_HEIGHT ; ++j) {
+					map[i][j] = savedInstanceState.getInt("world.map"+i+"x"+j);
+				}
+			}
+			Log.v("com.agenth.extremedigger", "map restored");
+		} else {
+			generate();
+		}
 	}
+	
+	public abstract void generate();
 	
 	public int getWidth(){
 		return mWidth;
@@ -40,5 +58,13 @@ public class World extends Entity{
 	
 	public static boolean isValid(int x, int y){
 		return x >= 0 && x < MAP_WIDTH && y >= 0 && y < MAP_HEIGHT;
+	}
+	
+	public void saveState(Bundle outState) {
+		for (int i = 0 ; i < MAP_WIDTH ; ++i) {
+			for (int j = 0 ; j < MAP_HEIGHT ; ++j) {
+				outState.putInt("world.map"+i+"x"+j, map[i][j]);
+			}
+		}
 	}
 }

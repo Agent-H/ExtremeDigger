@@ -3,6 +3,7 @@ package com.agenth.extremedigger;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.agenth.engine.core.Game;
@@ -10,15 +11,15 @@ import com.agenth.engine.core.World;
 import com.agenth.engine.graphics.WorldGraphic;
 import com.agenth.engine.physics.WorldPhysic;
 
-public class DiggerWorld extends World{
+public class DiggerWorld extends World {
 	
 	
-	public DiggerWorld(Game game, Context ctx) {
-		super(game);
+	public DiggerWorld(Game game, Context ctx, Bundle savedInstanceState) {
+		super(game, savedInstanceState);
 		
 		//	---	Initialisation des param�tres	---	
 		
-		//G�n�ration de la map de sprites
+		// Generating sprites map
 		SparseArray<Drawable> drawables = MaterialBank.getDrawables();		
 		
 		
@@ -29,13 +30,10 @@ public class DiggerWorld extends World{
 		
 		WorldPhysic physic = (WorldPhysic) requireOne("WorldPhysic");
 		physic.setCollisionTop(false);
-		
-		//Generation de la map
-		generate();
 	}
 	
 	/**
-	 * G�n�re une nouvelle map
+	 * Generates a new map
 	 */
 	public void generate(){
 		for(int i = 0 ; i < MAP_WIDTH ; i++){
@@ -54,7 +52,15 @@ public class DiggerWorld extends World{
 						super.set(i, j, MaterialBank.TYPE_GOLD);
 					} else if(makeAlu(j)){
 						super.set(i, j, MaterialBank.TYPE_ALU);
-					}  else {
+					} else if(makeRuby(j)){
+						super.set(i, j, MaterialBank.TYPE_RUBY);
+					}  else if(makeSaphir(j)){
+						super.set(i, j, MaterialBank.TYPE_SAPHIR);
+					}  else if(makeUranium(j)){
+						super.set(i, j, MaterialBank.TYPE_URANIUM);
+					}  else if(makeAmethyst(j)){
+						super.set(i, j, MaterialBank.TYPE_AMETHYST);
+					} else {
 						super.set(i, j, MaterialBank.TYPE_TERRE);
 					}
 				}
@@ -75,16 +81,28 @@ public class DiggerWorld extends World{
 	}
 	
 	private boolean makeGold(int x){
-		return Math.random() < (x*0.5/202-0.12)/((-1/(x-512)*100));
+		return (Math.random() < Math.atan(((x-150)/30.0)*0.020+0.025));
 	}
 	private boolean makeCopper(int x){
-		return Math.random() < Math.sqrt((float)x/51200);
+		return Math.random() < Math.sqrt(x/30000.0);
 	}
 	private boolean makeLead(int x){
 		return Math.random() < -0.05/256+0.15;
 	}
 	private boolean makeAlu(int x){
 		return Math.random() < Math.sqrt((x-50f)/51200);
+	}
+	private boolean makeRuby(int x){
+		return Math.random() < Math.sqrt(Math.max(0, (x-110.0)/(MAP_HEIGHT*30)));
+	}
+	private boolean makeSaphir(int x){
+		return Math.random() < Math.sqrt(Math.max(0, (x-90.0)/(MAP_HEIGHT*10)));
+	}
+	private boolean makeUranium(int x){
+		return Math.random() < Math.sqrt(Math.max(0, (x-150.0)/(MAP_HEIGHT*10)));
+	}
+	private boolean makeAmethyst(int x){
+		return Math.random() < Math.sqrt(Math.max(0, (x-200.0)/(MAP_HEIGHT*10)));
 	}
 	
 
@@ -111,8 +129,23 @@ public class DiggerWorld extends World{
 		}
 	}
 	
-	public void setDirect(int x, int y, int tile){
+	public void setDirect(int x, int y, int tile) {
 		super.set(x, y, tile);
+	}
+	
+	public void applyModifier(int x, int y, int modifier) {
+		setDirect(x, y, (get(x, y) & MaterialBank.MATERIAL_MASK) + (modifier & (~MaterialBank.MATERIAL_MASK)));
+	}
+	
+	/**
+	 * Alters the tile's material so that it is dug at some level in some direction
+	 * @param x
+	 * @param y
+	 * @param direction direction in which to dig
+	 * @param level how much to dig
+	 */
+	public void digMaterial(int x, int y, int direction, int level) {
+		applyModifier(x, y, 0x10*direction+level);
 	}
 	
 	public boolean isVide(int x, int y){
@@ -128,7 +161,7 @@ public class DiggerWorld extends World{
 	}
 	
 	public void computeVideType(int x, int y){
-		//Booleens � true si la case adjacente est vide
+		// True if adjacent case is empty
 		boolean left = isVide(x-1, y);
 		boolean right = isVide(x+1, y);
 		boolean top = isVide(x, y-1);

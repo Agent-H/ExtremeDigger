@@ -1,6 +1,10 @@
 package com.agenth.extremedigger;
 
+import java.io.FileInputStream;
+
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,15 +13,18 @@ import android.widget.TextView;
 
 import com.agenth.engine.core.Entity;
 import com.agenth.engine.core.Game2D;
+import com.agenth.engine.core.GameDescriptor;
 import com.agenth.engine.core.World;
 import com.agenth.engine.physics.PhysicEngine;
 import com.agenth.engine.util.VectF;
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.saving.*;
 
 public class DiggerGame extends Game2D{
 
 	private TextView mPauseView;
 	private GameState mGS;
+	private DiggerWorld mWorld;
+	private Digger mDigger;
 	
 	public DiggerGame(final FragmentActivity act) {
 		super(act, (SurfaceView) act.findViewById(R.id.fullscreen_content), 680);
@@ -31,25 +38,26 @@ public class DiggerGame extends Game2D{
 			
 		});
 		
-		mGS = new GameState();
-		
 		MaterialBank.init(act);
 		
-		DiggerWorld world = new DiggerWorld(this, act);
-		world.insertToGame();
+		mGS = new GameState();
+		mWorld = new DiggerWorld(this, act, null);
+
 		
-		Gameplay gameplay = new Gameplay(this, world);
+		mWorld.insertToGame();
+		
+		Gameplay gameplay = new Gameplay(this, mWorld);
 		addModule(gameplay);
 		
 		//Init views
 		gameplay.setMoneyView((MoneyView)act.findViewById(R.id.moneyLabel));
 		gameplay.setFuelView((FuelView) act.findViewById(R.id.fuelView));
 
-		Digger digger = (Digger)new Entity(this, "digger").requireOne("Digger");
-		digger.init(act, world);
-		digger.owner().insertToGame();
+		mDigger = (Digger)new Entity(this, "digger").requireOne("Digger");
+		mDigger.init(act, mWorld);
+		mDigger.owner().insertToGame();
 		
-		((PhysicEngine) getModule("Physic")).setGravity(new VectF(0f, 5f));
+		((PhysicEngine) getModule("Physic")).setGravity(new VectF(0f, 1.3f));
 		
 		mPauseView = (TextView) act.findViewById(R.id.pauseText);
 		
@@ -135,6 +143,34 @@ public class DiggerGame extends Game2D{
 				mPauseView.setVisibility(View.GONE);
 			}
 		});
+	}
+	
+	
+	@Override
+	protected GameDescriptor _save() {
+		
+		mDigger.abortDigging();
+		
+		Codec codec = new Codec();
+		
+		codec.saveGameState(mGS);
+		codec.saveWorld(mWorld);
+		codec.saveDigger(mDigger);
+		
+		GameDescriptor desc = new GameDescriptor(codec.encode(), Codec.CURRENT_VERSION);
+		
+		return desc;
+	}
+
+	@Override
+	protected void _load(GameDescriptor desc) {
+		Log.v("save", "restoring : "+desc.getDataVersion());
+		
+		Codec codec = Codec.decode(desc.getData(), desc.getDataVersion());
+		
+		codec.restoreGameState(mGS);
+		codec.restoreWorld(mWorld);
+		codec.restoreDigger(mDigger);
 	}
 	
 }

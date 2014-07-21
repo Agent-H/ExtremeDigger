@@ -90,9 +90,9 @@ public abstract class Component{
 	
 	/**
 	 * Called when component is activated with game.addActiveComponent
-	 * @param mLastStepTime time of last iteration in milliseconds
+	 * @param mLastStepTime duration of last iteration in milliseconds
 	 */
-	public void step(long mLastStepTime){
+	public void step(int mLastStepTime){
 		
 	}
 	

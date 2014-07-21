@@ -3,9 +3,17 @@
 
     <string name="app_name">Extreme Digger</string>
     <string name="hello_world">Hello world!</string>
+    
+    <string name="pause">Pause</string>
+    <string name="cargoButton">Cargo</string>
+    
     <string name="menu_settings">Settings</string>
     <string name="cargoLoadLabel">Cargo load :</string>
-    <string name="sellAll">Vendre tout</string>
+    
+    <string name="sellAll">Sell all</string>
+    <string name="totalLabel">Total :</string>
+    <string name="dollar">0$</string>
+    
     <string name="fillFuelButton">Faire le plein</string>
     <string name="moneyCount">Solde :</string>
     <string name="upgradesDialogTitle">Upgrades</string>

@@ -5,13 +5,14 @@ public class Cargo extends Upgradable{
 	
 	//Cargo upgrades
 	public static final int[] CAPACITY = {15, 30, 50};
+	public static final int[] PRICES   = {1000, 2000, 5000};
 	
 	private int mContentSize;
 	
 	private int[] mCargo;
 	
 	public Cargo(){
-		super(2, new int[]{1000, 2000, 5000}, CAPACITY);
+		super(2, PRICES, CAPACITY);
 		
 		mCargo = new int[MaterialBank.NB_MATERIALS];
 	}
@@ -27,6 +28,18 @@ public class Cargo extends Upgradable{
 		if(mContentSize < CAPACITY[level()] && id != -1){
 			mCargo[id] ++;
 			mContentSize ++;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean setMineralCount(int mineral, int amount) {
+		int id = MaterialBank.materialToId(mineral);
+		int diff = amount - mCargo[id];
+		if(mContentSize + diff <= CAPACITY[level()]){
+			mCargo[id] = amount;
+			mContentSize += diff;
 			return true;
 		}
 		

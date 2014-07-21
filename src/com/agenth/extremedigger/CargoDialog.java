@@ -1,12 +1,15 @@
 package com.agenth.extremedigger;
 
-import com.breakingsoft.extremedigger.R;
-
-import android.app.AlertDialog;
 import android.app.Dialog;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,30 +22,34 @@ public class CargoDialog extends PausingDialog{
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		super.onCreateDialog(savedInstanceState);
+		final Dialog dialog = super.onCreateDialog(savedInstanceState);
+		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 		
-   	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	    // Get the layout inflater
-	    LayoutInflater inflater = getActivity().getLayoutInflater();
-
-	    // Inflate and set the layout for the dialog
-	    // Pass null as the parent view because its going in the dialog layout
-	    View contents = inflater.inflate(R.layout.cargo_dialog, null);
-	    
-	    ListView list = (ListView)contents.findViewById(R.id.cargoList);
+		Window w = dialog.getWindow();
+		w.setLayout(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		
+		LayoutInflater inflater = getActivity().getLayoutInflater();
+		View contents = inflater.inflate(R.layout.cargo_dialog, null);
+		dialog.setContentView(contents);
+		
+		ListView list = (ListView)contents.findViewById(R.id.cargoList);
 	    
 	    CargoAdapter adapter = new CargoAdapter(getActivity(), mCargo, false);
 		list.setAdapter(adapter);
 		
+		
 		TextView load = (TextView)contents.findViewById(R.id.cargoLoadPercent);
 		load.setText(mCargo.getLoadPercent()+" %");
 		
-	    builder.setView(contents)
-	    // Add action buttons
-       .setPositiveButton("Ok", null);
+		final DialogFragment that = this;
+		((Button)contents.findViewById(R.id.done_button)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				that.dismiss();
+			}
+		});
+		
 	    
-	    //builder.setOnDismissListener(this);
-	    
-	    return builder.create();
+	    return dialog;
 	}
 }

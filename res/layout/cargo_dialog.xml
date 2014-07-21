@@ -1,37 +1,74 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cargoDialogRoot"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:minHeight="200dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context=".GameActivity" >
 
-    <ListView
-        android:id="@+id/cargoList"
+    <RelativeLayout
+        android:id="@+id/cargoMain"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cargoLoadLabel"
-        android:layout_centerHorizontal="true" 
-        android:layout_marginTop="10dp"/>
+        android:layout_height="300dp"
+        android:background="@drawable/dialog_main" >
 
-    <TextView
-        android:id="@+id/cargoLoadLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="10dp"
-        android:text="@string/cargoLoadLabel"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TextView
+            android:id="@+id/cargoLoadLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="21dp"
+            android:layout_marginTop="25dp"
+            android:text="@string/cargoLoadLabel"
+            style="@style/DialogText"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	
+	    <TextView
+	        android:id="@+id/cargoLoadPercent"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@+id/cargoLoadLabel"
+	        android:layout_alignBottom="@+id/cargoLoadLabel"
+	        android:layout_alignParentRight="true"
+	        style="@style/DialogText"
+	        android:layout_marginRight="20dp"
+	        android:text="10%"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    <ListView
+            android:id="@+id/cargoList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cargoLoadLabel"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:divider="#00000000"
+            android:dividerHeight="3dp"
+            android:layout_centerHorizontal="true" />
+	    
+	    
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/actions"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_below="@id/cargoMain"
+        android:background="@drawable/dialog_bottom" >
 
-    <TextView
-        android:id="@+id/cargoLoadPercent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:paddingRight="10dp"
-        android:text="10%"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Button
+            android:id="@+id/done_button"
+            android:layout_width="130dp"
+            android:layout_height="45dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_done"
+            android:text="" />
+
+    </RelativeLayout>
+
+    
 
 </RelativeLayout>

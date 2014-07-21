@@ -10,7 +10,7 @@ import android.view.View;
 
 import com.agenth.engine.core.Game;
 import com.agenth.engine.core.GameModule;
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
 public class Gameplay extends GameModule{
 	

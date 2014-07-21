@@ -10,7 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 
 import com.agenth.engine.physics.WorldPhysic;
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
 public class MaterialBank {
 	public static final int BREAKABLE_MASK = 0x20000000;
@@ -87,6 +87,42 @@ public class MaterialBank {
 			TYPE_GOLD1B = MATERIAL_GOLD + 0x31,
 			TYPE_GOLD2B = MATERIAL_GOLD + 0x32,
 			TYPE_GOLD3B = MATERIAL_GOLD + 0x33,
+			TYPE_RUBY1L = MATERIAL_RUBY + 0x01,
+			TYPE_RUBY2L = MATERIAL_RUBY + 0x02,
+			TYPE_RUBY3L = MATERIAL_RUBY + 0x03,
+			TYPE_RUBY1R = MATERIAL_RUBY + 0x11,
+			TYPE_RUBY2R = MATERIAL_RUBY + 0x12,
+			TYPE_RUBY3R = MATERIAL_RUBY + 0x13,
+			TYPE_RUBY1B = MATERIAL_RUBY + 0x31,
+			TYPE_RUBY2B = MATERIAL_RUBY + 0x32,
+			TYPE_RUBY3B = MATERIAL_RUBY + 0x33,
+			TYPE_SAPHIR1L = MATERIAL_SAPHIR + 0x01,
+			TYPE_SAPHIR2L = MATERIAL_SAPHIR + 0x02,
+			TYPE_SAPHIR3L = MATERIAL_SAPHIR + 0x03,
+			TYPE_SAPHIR1R = MATERIAL_SAPHIR + 0x11,
+			TYPE_SAPHIR2R = MATERIAL_SAPHIR + 0x12,
+			TYPE_SAPHIR3R = MATERIAL_SAPHIR + 0x13,
+			TYPE_SAPHIR1B = MATERIAL_SAPHIR + 0x31,
+			TYPE_SAPHIR2B = MATERIAL_SAPHIR + 0x32,
+			TYPE_SAPHIR3B = MATERIAL_SAPHIR + 0x33,
+			TYPE_URANIUM1L = MATERIAL_URANIUM + 0x01,
+			TYPE_URANIUM2L = MATERIAL_URANIUM + 0x02,
+			TYPE_URANIUM3L = MATERIAL_URANIUM + 0x03,
+			TYPE_URANIUM1R = MATERIAL_URANIUM + 0x11,
+			TYPE_URANIUM2R = MATERIAL_URANIUM + 0x12,
+			TYPE_URANIUM3R = MATERIAL_URANIUM + 0x13,
+			TYPE_URANIUM1B = MATERIAL_URANIUM + 0x31,
+			TYPE_URANIUM2B = MATERIAL_URANIUM + 0x32,
+			TYPE_URANIUM3B = MATERIAL_URANIUM + 0x33,
+			TYPE_AMETHYST1L = MATERIAL_AMETHYST + 0x01,
+			TYPE_AMETHYST2L = MATERIAL_AMETHYST + 0x02,
+			TYPE_AMETHYST3L = MATERIAL_AMETHYST + 0x03,
+			TYPE_AMETHYST1R = MATERIAL_AMETHYST + 0x11,
+			TYPE_AMETHYST2R = MATERIAL_AMETHYST + 0x12,
+			TYPE_AMETHYST3R = MATERIAL_AMETHYST + 0x13,
+			TYPE_AMETHYST1B = MATERIAL_AMETHYST + 0x31,
+			TYPE_AMETHYST2B = MATERIAL_AMETHYST + 0x32,
+			TYPE_AMETHYST3B = MATERIAL_AMETHYST + 0x33,
 			TYPE_VIDE = 0x00000000,
 			TYPE_VIDE1TOP = 0x00000001,
 			TYPE_VIDE1LEFT = 0x00000002,
@@ -214,6 +250,46 @@ public class MaterialBank {
 		mDrawables.append(TYPE_GOLD1L, res.getDrawable(R.drawable.gold1l));
 		mDrawables.append(TYPE_GOLD2L, res.getDrawable(R.drawable.gold2l));
 		mDrawables.append(TYPE_GOLD3L, res.getDrawable(R.drawable.gold3l));
+		mDrawables.append(TYPE_RUBY, res.getDrawable(R.drawable.ruby));
+		mDrawables.append(TYPE_RUBY1B, res.getDrawable(R.drawable.ruby1b));
+		mDrawables.append(TYPE_RUBY2B, res.getDrawable(R.drawable.ruby2b));
+		mDrawables.append(TYPE_RUBY3B, res.getDrawable(R.drawable.ruby3b));
+		mDrawables.append(TYPE_RUBY1R, res.getDrawable(R.drawable.ruby1r));
+		mDrawables.append(TYPE_RUBY2R, res.getDrawable(R.drawable.ruby2r));
+		mDrawables.append(TYPE_RUBY3R, res.getDrawable(R.drawable.ruby3r));
+		mDrawables.append(TYPE_RUBY1L, res.getDrawable(R.drawable.ruby1l));
+		mDrawables.append(TYPE_RUBY2L, res.getDrawable(R.drawable.ruby2l));
+		mDrawables.append(TYPE_RUBY3L, res.getDrawable(R.drawable.ruby3l));
+		mDrawables.append(TYPE_SAPHIR, res.getDrawable(R.drawable.saphir));
+		mDrawables.append(TYPE_SAPHIR1B, res.getDrawable(R.drawable.saphir1b));
+		mDrawables.append(TYPE_SAPHIR2B, res.getDrawable(R.drawable.saphir2b));
+		mDrawables.append(TYPE_SAPHIR3B, res.getDrawable(R.drawable.saphir3b));
+		mDrawables.append(TYPE_SAPHIR1R, res.getDrawable(R.drawable.saphir1r));
+		mDrawables.append(TYPE_SAPHIR2R, res.getDrawable(R.drawable.saphir2r));
+		mDrawables.append(TYPE_SAPHIR3R, res.getDrawable(R.drawable.saphir3r));
+		mDrawables.append(TYPE_SAPHIR1L, res.getDrawable(R.drawable.saphir1l));
+		mDrawables.append(TYPE_SAPHIR2L, res.getDrawable(R.drawable.saphir2l));
+		mDrawables.append(TYPE_SAPHIR3L, res.getDrawable(R.drawable.saphir3l));
+		mDrawables.append(TYPE_URANIUM, res.getDrawable(R.drawable.uranium));
+		mDrawables.append(TYPE_URANIUM1B, res.getDrawable(R.drawable.uranium1b));
+		mDrawables.append(TYPE_URANIUM2B, res.getDrawable(R.drawable.uranium2b));
+		mDrawables.append(TYPE_URANIUM3B, res.getDrawable(R.drawable.uranium3b));
+		mDrawables.append(TYPE_URANIUM1R, res.getDrawable(R.drawable.uranium1r));
+		mDrawables.append(TYPE_URANIUM2R, res.getDrawable(R.drawable.uranium2r));
+		mDrawables.append(TYPE_URANIUM3R, res.getDrawable(R.drawable.uranium3r));
+		mDrawables.append(TYPE_URANIUM1L, res.getDrawable(R.drawable.uranium1l));
+		mDrawables.append(TYPE_URANIUM2L, res.getDrawable(R.drawable.uranium2l));
+		mDrawables.append(TYPE_URANIUM3L, res.getDrawable(R.drawable.uranium3l));
+		mDrawables.append(TYPE_AMETHYST, res.getDrawable(R.drawable.amethyst));
+		mDrawables.append(TYPE_AMETHYST1B, res.getDrawable(R.drawable.amethyst1b));
+		mDrawables.append(TYPE_AMETHYST2B, res.getDrawable(R.drawable.amethyst2b));
+		mDrawables.append(TYPE_AMETHYST3B, res.getDrawable(R.drawable.amethyst3b));
+		mDrawables.append(TYPE_AMETHYST1R, res.getDrawable(R.drawable.amethyst1r));
+		mDrawables.append(TYPE_AMETHYST2R, res.getDrawable(R.drawable.amethyst2r));
+		mDrawables.append(TYPE_AMETHYST3R, res.getDrawable(R.drawable.amethyst3r));
+		mDrawables.append(TYPE_AMETHYST1L, res.getDrawable(R.drawable.amethyst1l));
+		mDrawables.append(TYPE_AMETHYST2L, res.getDrawable(R.drawable.amethyst2l));
+		mDrawables.append(TYPE_AMETHYST3L, res.getDrawable(R.drawable.amethyst3l));
 		
 		mDrawables.append(MATERIAL_TERRE, res.getDrawable(R.drawable.terre));
 		mDrawables.append(MATERIAL_LEAD, res.getDrawable(R.drawable.lead));

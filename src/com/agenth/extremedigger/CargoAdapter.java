@@ -1,6 +1,6 @@
 package com.agenth.extremedigger;
 
-import com.breakingsoft.extremedigger.R;
+import com.agenth.extremedigger.R;
 
 import android.app.Activity;
 import android.util.SparseIntArray;
@@ -102,7 +102,7 @@ public class CargoAdapter extends BaseAdapter{
 		if(mDisplayPrice){
 			holder.count.setText(""+mMaterialCounts.get(material)+" x "+MaterialBank.getMaterialPrice(material)+"$");
 		} else {
-			holder.count.setText(""+mMaterialCounts.get(material));
+			holder.count.setText("x"+mMaterialCounts.get(material));
 		}
 		return convertView;
 	}

@@ -1,11 +1,19 @@
 package com.agenth.engine.core;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
@@ -44,7 +52,12 @@ public abstract class Game extends EventEmitter{
 	/**
 	 * Duration of one step in milliseconds
 	 */
-	public static final long STEP_INTERVAL = 30;
+	public static final int STEP_INTERVAL = 30;
+	
+	/**
+	 * Prefix prepened to saved files to avoid collisions
+	 */
+	public static final String FILE_PREFIX = "SAVE_";
 	
 	private GameThread mThread;
 	
@@ -62,12 +75,15 @@ public abstract class Game extends EventEmitter{
 	
 	private FragmentActivity mAct;
 	
+	/** Used to persist game state to phone's storage. */
+	private String mName;
+	
 	
 	/**
 	 * Default constructor. Calls registerComponents().<br />
 	 * note : it is recomended that you call super.registerComponents() within 
-	 * registerComponents() if you are shadowing this function since the default 
-	 * Game implementation may add components for it to work well.
+	 * registerComponents() if you are implementing this function since the default 
+	 * Game implementation may add components too.
 	 */
 	public Game(FragmentActivity act){
 		mAct = act;
@@ -109,7 +125,7 @@ public abstract class Game extends EventEmitter{
 	public void start()
 	{
 		if(!mRunning){
-			Log.v("com.breakingsoft.components", "Starting game");
+			Log.v("com.agenth.components", "Starting game");
 			mRunning = true;
 			
 			postEvent("started", this);
@@ -119,7 +135,7 @@ public abstract class Game extends EventEmitter{
 			mThread.start();
 		}
 		else{
-			Log.v("com.breakingsoft.components", "Starting game : game is already running.");
+			Log.v("com.agenth.components", "Starting game : game is already running.");
 		}
 	}
 	
@@ -158,7 +174,7 @@ public abstract class Game extends EventEmitter{
 	public void stop()
 	{
 		if(mRunning){
-			Log.v("com.breakingsoft.components", "Game pause requested...");
+			Log.v("com.agenth.components", "Game pause requested...");
 			
 			//Pauses game
 			pause();
@@ -170,14 +186,13 @@ public abstract class Game extends EventEmitter{
 			boolean keepWaiting = true;
 			while(keepWaiting) {
 				try {
-					// Arr�te le thread
+					// Stopps the thread
 					mThread.join();
-					//Il faut jeter le thread car les threads sont � usage unique.
+					// Need to throw away the thread since it is one-time use.
 					mThread = null;
 					keepWaiting = false;
-					// Comme on veut s'assurer qu'il s'arr�te, on fait une boucle infinie
 				} catch (InterruptedException e) {
-					// Essaie encore 
+					// Try again
 					keepWaiting = true;
 				}
 			}
@@ -185,7 +200,7 @@ public abstract class Game extends EventEmitter{
 			postEvent("stopped", this);
 		}
 		else
-			Log.v("com.breakingsoft.components", "Pausing game : game already stopped.");
+			Log.v("com.agenth.components", "Pausing game : game already stopped.");
 		
 	}
 	
@@ -296,18 +311,103 @@ public abstract class Game extends EventEmitter{
 	}
 	
 	
+	/* Persistence */
+	
+	/**
+	 * Save this game as name
+	 * @param name name to save this game as
+	 * @throws FileNotFoundException 
+	 * @see {@link save}
+	 */
+	public final void saveAs(String name) throws IOException {
+		
+		FileOutputStream os = mAct.openFileOutput(FILE_PREFIX+name, Context.MODE_PRIVATE);
+		
+		GameDescriptor desc = this._save();
+		
+		int version = desc.getDataVersion();
+		os.write(version >> 8);
+		os.write(version);
+		
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		oos.writeObject(desc.getData());
+		oos.close();
+	}
+	
+	/**
+	 * Persists the current game state to storage. The current game name is used if any, otherwise a datetime string is used instead.
+	 * If a game with that name already exists, it is overwritten.
+	 * 
+	 * @return the actual name used for saving.
+	 * @throws IOException 
+	 */
+	public final String save() throws IOException {
+		String filename = mName;
+		
+		if (filename == null) {
+			filename = (new Date()).toString();
+		}
+		
+		saveAs(filename);
+		
+		return filename;
+	}
+	
+	/**
+	 * Restores the game from memory. Implement _load to actually do this.
+	 * @param name
+	 * @throws FileNotFoundException 
+	 */
+	public final void load(String name) throws IOException, ClassNotFoundException {
+		FileInputStream is = mAct.openFileInput(FILE_PREFIX+name);
+		
+		int version = (is.read() << 8) | is.read();
+		
+		ObjectInputStream ois = new ObjectInputStream(is);
+		Serializable ser = (Serializable) ois.readObject();
+		ois.close();
+		
+		this._load(new GameDescriptor(name, ser, version));
+	}
+	
+	/**
+	 * Returns a game descriptor to be saved. The game descriptor must not contain a "name" property as it is already specified by
+	 * the name of the game (see saveAs(String name))
+	 */
+	protected abstract GameDescriptor _save();
+	
+	/**
+	 * Implement this method to restore the game state from a game descriptor.
+	 */
+	protected abstract void _load(GameDescriptor desc);
+	
+	
+	/**
+	 * Gets the list of saved games
+	 * @return an array of GameDescriptors
+	 */
+	public static final GameDescriptor[] getGameList() {
+		// TODO implement this method
+		return null;
+	}
+	
+	public final String getName() {
+		return mName;
+	}
+	
+	
 	/**
 	 * Internal thread in which game loop runs
 	 */
 	private class GameThread extends Thread
 	{
 		
-		private long mLastStepTime;
+		private int mLastStepTime;
 		private long mPrevTime;
 		
 		@Override
 	    public void run() {
-			Log.v("com.breakingsoft.components", "Game thread started.");
+			Log.v("com.agenth.components", "Game thread started.");
 			
 			mLastStepTime = STEP_INTERVAL;
 			
@@ -331,7 +431,7 @@ public abstract class Game extends EventEmitter{
 				stopChronoAndSleep();
 			}
 			
-			Log.v("com.breakingsoft.components", "Game thread aborted.");
+			Log.v("com.agenth.components", "Game thread aborted.");
 		}
 		
 		/**
@@ -359,7 +459,7 @@ public abstract class Game extends EventEmitter{
 			}
 			
 			//After sleeping, measures total step time
-			mLastStepTime = System.nanoTime() - mPrevTime;
+			mLastStepTime = (int)(System.nanoTime() - mPrevTime)/1000000;
 		}
 	}
 }

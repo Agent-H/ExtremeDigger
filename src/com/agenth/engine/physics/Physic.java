@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.agenth.engine.components.TwoDimention;
 import com.agenth.engine.core.Component;
@@ -25,7 +26,7 @@ public class Physic extends Component implements EventListener{
 	
 	private float mWeight = 100;
 	
-	private float mDamping = 0.1f;
+	private VectF mDamping = new VectF(0.1f, 0.1f);
 	private VectF mDampingVect;
 	
 	private PhysicEngine mPhysics;
@@ -128,7 +129,16 @@ public class Physic extends Component implements EventListener{
 		return mSpeed;
 	}
 	
+	public VectF getPrevSpeed() {
+		return mPrevSpeed;
+	}
+	
 	public Physic setDamping(float damping){
+		mDamping.set(damping, damping);
+		return this;
+	}
+	
+	public Physic setDamping(VectF damping) {
 		mDamping = damping;
 		return this;
 	}
@@ -139,7 +149,7 @@ public class Physic extends Component implements EventListener{
 		return mNextRect;
 	}
 	
-	//Pas public, seul le moteur physique bouge une entit�
+	// Not public, only the engine can do this
 	void step(){
 		if(mEnabled){
 			my2D.move(mSpeed);
@@ -148,7 +158,7 @@ public class Physic extends Component implements EventListener{
 				updateSpeed();
 			}
 			
-			mDampingVect.set(mSpeed.x*mDamping+Math.signum(mSpeed.x)*0.5f, mSpeed.y*mDamping+Math.signum(mSpeed.y)*0.5f);
+			mDampingVect.set(mSpeed.x*mDamping.x+Math.signum(mSpeed.x)*0.5f, mSpeed.y*mDamping.y+Math.signum(mSpeed.y)*0.5f);
 			
 			setSpeed(
 				(Math.abs(mSpeed.x) > Math.abs(mDampingVect.x)) ? mSpeed.x - mDampingVect.x : 0,
@@ -174,9 +184,12 @@ public class Physic extends Component implements EventListener{
 	}
 
 	public void doCollision(Side direction, Physic other){
-		mEventData.other = other;
-		mEventData.side = direction;
-		owner().postEvent("collision", mEventData);
+		// Hacky part: an object that's not enabled receives events while the other object doesn't
+		if (other == null || other.mEnabled) {
+			mEventData.other = other;
+			mEventData.side = direction;
+			owner().postEvent("collision", mEventData);
+		}
 	}
 	
 	public void computeCollisionSpeed(Orientation axis, Physic other){
@@ -297,6 +310,7 @@ public class Physic extends Component implements EventListener{
 				doCollision(Side.RIGHT, o2);
 				o2.doCollision(Side.LEFT, this);
 			} else {
+				Log.v("com.agenth.components", "Collision on axis X with relative speed 0 !");
 				doCollision(Side.NONE, o2);
 				o2.doCollision(Side.NONE, this);
 			}
@@ -326,6 +340,7 @@ public class Physic extends Component implements EventListener{
 				doCollision(Side.BOTTOM, o2);
 				o2.doCollision(Side.TOP, this);
 			} else {
+				Log.v("com.agenth.components", "Collision on axis Y with relative speed 0 !");
 				doCollision(Side.NONE, o2);
 				o2.doCollision(Side.NONE, this);
 			}
@@ -338,6 +353,7 @@ public class Physic extends Component implements EventListener{
 	private static float computeCoordWithHeight(float X1, float X2, float H){
 		return H*(X2-X1)+X1;
 	}
+	
 	private static float getCollisionHeight(float A1, float A2, float B1, float B2){
 		return (B1-A1)/(A2-A1-B2+B1);
 	}
