@@ -3,37 +3,59 @@ package com.agenth.extremedigger;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.agenth.engine.components.Animation;
-import com.agenth.engine.components.Toast;
 import com.agenth.engine.components.Animation.AnimationListener;
+import com.agenth.engine.components.Toast;
 import com.agenth.engine.core.Component;
 import com.agenth.engine.core.Entity;
+import com.agenth.engine.core.Event;
+import com.agenth.engine.core.EventListener;
 import com.agenth.engine.core.Game;
 import com.agenth.engine.core.World;
 import com.agenth.engine.graphics.Graphic;
 import com.agenth.engine.graphics.Sprite;
 import com.agenth.engine.graphics.ViewTarget;
+import com.agenth.engine.physics.CollisionEventData;
 import com.agenth.engine.physics.Physic;
 import com.agenth.engine.physics.WorldPhysic;
 import com.agenth.engine.util.VectF;
-import com.agenth.extremedigger.R;
 
-public class Digger extends Component implements AnimationListener, JoystickMovedListener{
+public class Digger extends Component implements AnimationListener, JoystickView.JoystickMovedListener, EventListener{
 	
+	/** Cannot digg if digger has an absolute speed bigger than this */
 	public static final int MAX_SPEED_FOR_DIGGING = 4;
-	public static final int JOYSTICK_MIN_THRESHOLD = 40;
-	public static final float DISTANCE_DIGGING_THRESHOLD = 1;
+	/** Joystick movements less than this won't be considered */
+	public static final float JOYSTICK_MIN_THRESHOLD = 0.15f;
+	/** Distance between digger and block to start digging */
+	public static final float DISTANCE_DIGGING_THRESHOLD = 3;
+	/** Total time to digg one block */
 	public static final int DIGGING_TIME = 1000;
-	public static final long DIGGING_START_TIME = 20000000;
-	public static final int DIGGING_FUEL_DIVIDER = 1500000;
-	public static final int NOT_DIGGING_FUEL_DIVIDER = 8000000;
+	/** Delay before starting digging */
+	public static final long DIGGING_START_TIME = 20;
+	/** Factor for fuel consumption during digging */
+	public static final int DIGGING_FUEL_COEFF = 10;
+	/** Factor for fuel consumption during normal operation */
+	public static final int NOT_DIGGING_FUEL_COEFF = 1;
+	public static final float ENGINE_X_FORCE = 2;
+	public static final float ENGINE_Y_FORCE = 3;
+	
+	/** factor to get physic body size from tile size ( <1 ) */
+	public static final float SIZE_FACTOR_PHYSIC = 0.90f;
+	/** factor to get sprite size from tile size ( >1 )*/
+	public static final float SIZE_FACTOR_SPRITE = 77f/60;
+	/** offset at which to place the digger once finished digging a tile relative to the tile's origin */
+	public static final int AFTER_DIGG_OFFSET = (int)(World.TILE_SIZE*(1-SIZE_FACTOR_PHYSIC)/2);
+	/** Amount of time the digger must stay in the air before being considered as "flying" */
+	public static final int FLYING_TIMER = 100;
 	
 	public static final int DIRECTION_LEFT = 0, 
 							DIRECTION_RIGHT = 1, 
 							DIRECTION_UP = 2, 
 							DIRECTION_DOWN = 3,
-							DIRECTION_NONE = 4;
+							DIRECTION_UP_NOJET = 4,
+							DIRECTION_NONE = 5;
 	
 	//True if digger is currently digging (disables physic)
 	private boolean mIsDigging;
@@ -41,6 +63,12 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	private boolean diggingAbortable;
 	//Measures time during which user is trying to digg before starting actual digging
 	private long diggingTimer = 0;
+	
+	// True when the sprite is in contact with the ground
+	private boolean mIsFlying;
+	
+	// Adds a little delay before setting isTouchingGround to false
+	private int mFlyingTimer;
 	
 	private int diggingX, diggingY;
 	private int direction, joystickDirection = DIRECTION_NONE;
@@ -51,9 +79,10 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	
 	private DiggerWorld mWorld;
 	
-	private VectF force = new VectF();
+	private VectF mForce = new VectF();
+	private float mStickX = 0, mStickY = 0;
 	
-	private Drawable[] mDrawables = new Drawable[4];
+	private Drawable[] mDrawables = new Drawable[6];
 	
 	private Sprite mSprite;
 	
@@ -73,29 +102,33 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 		
 		mPhysic = ((Physic)requireOne("Physic"))
 			.setSpeed(0,0)
-			.setSize(World.TILE_SIZE-5, World.TILE_SIZE-5)
-			.setBounceFactor(0.3f)
-			.setDamping(0.2f)
-			.addForce(force);
+			.setSize(World.TILE_SIZE*SIZE_FACTOR_PHYSIC, World.TILE_SIZE*SIZE_FACTOR_PHYSIC)
+			.setBounceFactor(0.1f)
+			.setDamping(new VectF(0.06f, 0.0017f))
+			.addForce(mForce);
 		
 		Resources res = act.getResources();
 		mDrawables[DIRECTION_UP] = res.getDrawable(R.drawable.foreuse_hd);
 		mDrawables[DIRECTION_RIGHT] = res.getDrawable(R.drawable.foreuse_d);
 		mDrawables[DIRECTION_LEFT] = res.getDrawable(R.drawable.foreuse_g);
 		mDrawables[DIRECTION_DOWN] = res.getDrawable(R.drawable.foreuse_bd);
+		mDrawables[DIRECTION_UP_NOJET] = res.getDrawable(R.drawable.foreuse_hd_nojet);
+		mDrawables[DIRECTION_NONE] = mDrawables[DIRECTION_RIGHT];
 				
 		mSprite = ((Sprite)requireOne("Sprite"))
 			.setDrawable(mDrawables[DIRECTION_RIGHT]);
 		mSprite.setLayer(Graphic.LAYER_FOREGROUND-1);
 		
 		//Definition de la taille du sprite en respectant les proportions
-		mSprite.setSize((int)(World.TILE_SIZE*((float)77/60)), (int)(World.TILE_SIZE*((float)77/60)));
+		mSprite.setSize((int)(World.TILE_SIZE*SIZE_FACTOR_SPRITE), (int)(World.TILE_SIZE*SIZE_FACTOR_SPRITE));
 		
 		
 		((ViewTarget)requireOne("ViewTarget")).enable();
 		((JoystickView) act.findViewById(R.id.joystick)).setOnJostickMovedListener(this);
 		
 		game().addActiveComponent(this);
+		
+		owner().bind("collision", this);
 
 		return init();
 	}
@@ -114,14 +147,39 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	}
 
 	@Override
-	public void step(long time){
+	public void step(int time){
 		if(!game().isPaused()){
+			
+			setAppropriateSprite();
+			
 			if(!mIsDigging){
-				mGS.decreaseFuel((int) (time/NOT_DIGGING_FUEL_DIVIDER));
-				int px = (int)mPhysic.get2D().centerX()/World.TILE_SIZE;
-				int py = (int)mPhysic.get2D().centerY()/World.TILE_SIZE;
-				
-				switch(joystickDirection){
+				stepNotDigging(time);
+			} else {
+				stepDigging(time);
+			}
+			
+		}
+	}
+
+	private void stepDigging(int time) {
+		mGS.decreaseFuel(time * DIGGING_FUEL_COEFF);
+		if(joystickDirection != direction && diggingAbortable){
+			abortDigging();
+		}
+	}
+
+	private void stepNotDigging(int time) {
+		mForce.set(
+				mStickX*ENGINE_X_FORCE, 
+				mStickY*ENGINE_Y_FORCE
+			);
+		
+		mGS.decreaseFuel(time * NOT_DIGGING_FUEL_COEFF);
+		
+		if (!mIsFlying) {
+			int px = (int)mPhysic.get2D().centerX()/World.TILE_SIZE;
+			int py = (int)mPhysic.get2D().centerY()/World.TILE_SIZE;
+			switch(joystickDirection){
 				case DIRECTION_LEFT:
 					tryDigg(px-1, py, time, DIRECTION_LEFT);
 					break;
@@ -131,18 +189,25 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 				case DIRECTION_DOWN:
 					tryDigg(px, py+1, time, DIRECTION_DOWN);
 					break;
-				}
-			} else {
-				mGS.decreaseFuel((int) (time/DIGGING_FUEL_DIVIDER));
-				if(joystickDirection != direction && diggingAbortable){
-					abortDigging();
-				}
 			}
-			
+		}
+		// Re-checks whether is digging since we may have just started digging
+		if (!mIsDigging && !mIsFlying && (mFlyingTimer -= time) < 0) {
+			mIsFlying = true;
+		}
+	}
+
+	private void setAppropriateSprite() {
+		if (!mIsFlying) {
+			mSprite.setDrawable(mDrawables[direction]);
+		} else if (mForce.y < 0){
+			mSprite.setDrawable(mDrawables[DIRECTION_UP]);
+		} else {
+			mSprite.setDrawable(mDrawables[DIRECTION_UP_NOJET]);
 		}
 	}
 	
-	private void abortDigging(){
+	public void abortDigging(){
 		//Restore le type de brique avant creusage
 		int tile = mWorld.get(diggingX, diggingY);
 		int type = tile & MaterialBank.MATERIAL_MASK;
@@ -170,7 +235,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 		mAnimation.stop();
 	}
 	
-	private void tryDigg(int x, int y, long time, int direction){
+	private void tryDigg(int x, int y, int time, int direction){
 		
 		boolean directionCheck = 
 				(direction == DIRECTION_LEFT) ? (mPhysic.get2D().left() % World.TILE_SIZE) < DISTANCE_DIGGING_THRESHOLD
@@ -178,7 +243,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 			: 	(direction == DIRECTION_DOWN) ? World.TILE_SIZE - (mPhysic.get2D().bottom() % World.TILE_SIZE) < DISTANCE_DIGGING_THRESHOLD
 			: false;
 		
-		if(directionCheck && !mWorld.isVide(x,  y) && mPhysic.getSpeed().length() < MAX_SPEED_FOR_DIGGING){
+		if(directionCheck && !mWorld.isVide(x,  y) && mPhysic.getPrevSpeed().length() < MAX_SPEED_FOR_DIGGING){
 			if(diggingTimer > DIGGING_START_TIME){
 				setDirection(direction);
 				startDigging(x, y);
@@ -207,9 +272,8 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	}
 	
 	public void setDirection(int dir){
-		direction = dir;
 		if(dir != DIRECTION_NONE){
-			mSprite.setDrawable(mDrawables[direction]);
+			direction = dir;
 		}
 	}
 
@@ -225,7 +289,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 					.requireOne("Toast"))
 					.setText("+1 "+MaterialBank.getMaterialName(mineral))
 					.show(diggingX*World.TILE_SIZE+20, (diggingY+0.5f)*World.TILE_SIZE+40);
-				} else { //Echec de l'ajout du mineral. Le cargo doit �tre plein
+				} else { // Cannot add material, cargo must be full
 					((Toast)new Entity(game())
 					.requireOne("Toast"))
 					.setText("Cargo full !")
@@ -248,7 +312,7 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 			mWorld.setDirect(diggingX, diggingY, (mWorld.get(diggingX, diggingY) & MaterialBank.MATERIAL_MASK) + 0x10*direction+2);
 		} else if(time > total/4){
 			diggingAbortable = false;
-			mWorld.setDirect(diggingX, diggingY, (mWorld.get(diggingX, diggingY) & MaterialBank.MATERIAL_MASK) + 0x10*direction + 1);
+			mWorld.digMaterial(diggingX, diggingY, direction, 1);
 			mWorld.computeVideType(
 			(direction == DIRECTION_LEFT) ? diggingX+1 : (direction == DIRECTION_RIGHT) ? diggingX-1 : diggingX, 
 			(direction == DIRECTION_UP) ? diggingY+1 : (direction == DIRECTION_DOWN) ? diggingY-1 : diggingY);
@@ -256,23 +320,23 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 	}
 	
 	@Override
-	public void OnMoved(int pan, int tilt) {
-		float fX = 0, fY = 0;
+	public void OnMoved(float pan, float tilt) {
 		
 		if(Math.abs(pan) > JOYSTICK_MIN_THRESHOLD){
-			fX = (float)pan / 40;
-		}
-		if(tilt > JOYSTICK_MIN_THRESHOLD) {
-			fY = -tilt/10;
-		}
+			mStickX = pan;
+		} else 
+			mStickX = 0;
 		
-		force.set(fX, fY);
+		if(-tilt > JOYSTICK_MIN_THRESHOLD) {
+			mStickY = tilt;
+		} else
+			mStickY = 0;
 		
 		if(Math.abs(pan) > Math.abs(tilt) && Math.abs(pan) > JOYSTICK_MIN_THRESHOLD){
 			joystickDirection = (pan > 0) ? DIRECTION_RIGHT : DIRECTION_LEFT;
 		}
 		else if(Math.abs(tilt) > Math.abs(pan) && Math.abs(tilt) > JOYSTICK_MIN_THRESHOLD) {
-			joystickDirection =  (tilt > 0) ? DIRECTION_UP : DIRECTION_DOWN;
+			joystickDirection =  (tilt < 0) ? DIRECTION_NONE : DIRECTION_DOWN;
 		} else {
 			joystickDirection = DIRECTION_NONE;
 		}
@@ -284,12 +348,22 @@ public class Digger extends Component implements AnimationListener, JoystickMove
 
 	@Override
 	public void OnReleased() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void OnReturnedToCenter() {
-		force.set(0,0);
+		mForce.set(0,0);
+	}
+
+	@Override
+	public void onEvent(Event evt) {
+		/* Only event bound right now are collision events */
+		CollisionEventData evtData = (CollisionEventData)evt.data;
+		
+		if (evtData.side == Physic.Side.BOTTOM) {
+			mIsFlying = false;
+			mFlyingTimer = FLYING_TIMER;
+		}
 	}
 }

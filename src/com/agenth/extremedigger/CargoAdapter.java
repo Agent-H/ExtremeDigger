@@ -102,7 +102,7 @@ public class CargoAdapter extends BaseAdapter{
 		if(mDisplayPrice){
 			holder.count.setText(""+mMaterialCounts.get(material)+" x "+MaterialBank.getMaterialPrice(material)+"$");
 		} else {
-			holder.count.setText(""+mMaterialCounts.get(material));
+			holder.count.setText("x"+mMaterialCounts.get(material));
 		}
 		return convertView;
 	}

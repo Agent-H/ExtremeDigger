@@ -4,7 +4,7 @@ public class FuelTank extends Upgradable{
 
 	public static final int FUEL_LEVELS[] = {100, 200, 400, 700, 1200};
 	public static final int FUEL_PRICES[] = {750, 1500, 5000, 10000};
-	public static final int FUEL_COEFF = 100;
+	public static final int FUEL_COEFF = 1000;
 
 	private int mFuel = FUEL_LEVELS[0]*FUEL_COEFF;
 	
@@ -23,6 +23,10 @@ public class FuelTank extends Upgradable{
 	
 	public int getFuel(){
 		return mFuel;
+	}
+	
+	public void setFuel(int val) {
+		mFuel = val;
 	}
 	
 	public int getMaxFuel(){

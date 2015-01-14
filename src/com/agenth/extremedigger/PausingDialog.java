@@ -26,8 +26,9 @@ public abstract class PausingDialog extends DialogFragment{
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+		Dialog dialog = super.onCreateDialog(savedInstanceState);
 		mGame.pause();
-		return null;
+		return dialog;
 	}
 	
 	

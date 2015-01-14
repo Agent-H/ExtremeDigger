@@ -1,6 +1,7 @@
 package com.agenth.extremedigger;
 
 
+
 public class GameState extends com.agenth.engine.core.GameState{
 
 	public static final int START_MONEY = 100;
@@ -35,6 +36,11 @@ public class GameState extends com.agenth.engine.core.GameState{
 	
 	public int getMoney(){
 		return mMoney;
+	}
+	
+	public void setMoney(int money) {
+		mMoney = money;
+		moneyChanged = true;
 	}
 	
 	public FuelTank getFuelTank(){

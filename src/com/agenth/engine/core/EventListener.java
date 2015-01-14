@@ -5,7 +5,6 @@ package com.agenth.engine.core;
  * Event listener should listen to event emitters using EventEmitter.bind(). 
  * The emitter will call onEvent() with the appropriate Event object when 
  * an event this listener is listening to is fired.
- * @author Hadrien
  *
  */
 public interface EventListener {

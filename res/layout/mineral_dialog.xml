@@ -1,45 +1,80 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mineralDialogRoot"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:minHeight="200dp"
     tools:context=".GameActivity" >
     
-    <ListView
-        android:id="@+id/cargoList"
+    <RelativeLayout
+        android:id="@+id/mineralMain"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"        android:layout_marginTop="10dp" />
+        android:layout_height="300dp"
+        android:background="@drawable/dialog_main" >
+        
+        <ListView
+            android:id="@+id/cargoList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:divider="#00000000"
+            android:dividerHeight="3dp"
+            android:layout_centerHorizontal="true" />
+	
+	    <TextView
+	        android:id="@+id/totalLabel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/cargoList"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginLeft="16dp"
+	        android:layout_marginTop="16dp"
+	        style="@style/DialogText"
+	        android:text="@string/totalLabel"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    <TextView
+	        android:id="@+id/totalPrice"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@id/totalLabel"
+	        android:layout_alignParentRight="true"
+	        android:layout_marginRight="16dp"
+	        style="@style/DialogText"
+	        android:text="@string/dollar"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    <Button
+	        android:id="@+id/sellAll"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_below="@+id/totalPrice"
+	        android:layout_centerInParent="true"
+	        android:text="@string/sellAll"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/actions"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_below="@id/mineralMain"
+        android:background="@drawable/dialog_bottom" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cargoList"
-        android:layout_alignParentLeft="true"
-        android:text="Total :"
-        android:layout_marginLeft="16dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <Button
+            android:id="@+id/done_button"
+            android:layout_width="130dp"
+            android:layout_height="45dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_done"
+            android:text="" />
+
+    </RelativeLayout>
     
-    <TextView
-        android:id="@+id/totalPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/cargoList"
-        android:layout_alignParentRight="true"
-        android:text="0$"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="6dp"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    <Button
-        android:id="@+id/sellAll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/totalPrice"
-        android:layout_centerInParent="true"
-        android:text="@string/sellAll"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
     
 </RelativeLayout>

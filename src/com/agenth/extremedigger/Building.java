@@ -23,11 +23,14 @@ import com.agenth.engine.physics.Physic;
  */
 public class Building extends Component implements EventListener {
 
-	/** Le dialog s'ouvre si le digger est stopp� devant le building durant DIALOG_OPEN_DURATION */
-	public static final int DIALOG_OPEN_DURATION = 500000000;
+	/** Time the player must stop in front of the store before the dialog opens */
+	public static final int DIALOG_OPEN_DURATION = 500;
 	
-	/** 0 : dialog has not been shown yet **/
-	private int hasDialog;
+	/** initial value for disableDialogTimer */
+	public static final int DIALOG_DISABLE_TIME = 500;
+	
+	/** When timer is 0, dialog can be shown. Timer counts down when the player is not in front of the store **/
+	private int disableDialogTimer;
 	
 	/** True when digger is in front of the store */
 	private boolean isDigger;
@@ -36,7 +39,7 @@ public class Building extends Component implements EventListener {
 	private boolean isStopped;
 	
 	/** Indicates duration of digger's stop */
-	int timeStopped;
+	int mTimeStopped;
 	
 	
 	private PausingDialog mDialog;
@@ -85,20 +88,22 @@ public class Building extends Component implements EventListener {
 			}
 		}
 	}
-	
+
 	@Override
-	public void step(long time){
+	public void step(int time){
 		if(!game().isPaused()){
-			if(isDigger){
-				if(isStopped && hasDialog == 0){
-					timeStopped += time;
-					mDialog.show(mManager, "Building");
-					hasDialog = 2;
+			if(isDigger) {
+				if(isStopped && disableDialogTimer <= 0){
+					mTimeStopped += time;
+					if (mTimeStopped > DIALOG_OPEN_DURATION) {
+						mDialog.show(mManager, "Building");
+						disableDialogTimer = DIALOG_DISABLE_TIME;
+					}
 				} else {
-					timeStopped = 0;
+					mTimeStopped = 0;
 				}
-			} else if(hasDialog > 0) {
-				hasDialog--;				
+			} else if(disableDialogTimer > 0) {
+				disableDialogTimer -= time;				
 			}
 			
 			isStopped = false;

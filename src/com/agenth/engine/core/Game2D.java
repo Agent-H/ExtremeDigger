@@ -22,7 +22,7 @@ import com.agenth.engine.physics.WorldPhysic;
  * @author Hadrien
  *
  */
-public class Game2D extends Game{
+abstract public class Game2D extends Game{
 	
 	/**
 	 * Creates a 2D game with physics and graphics using the activity layout.
